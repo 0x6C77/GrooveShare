@@ -1,0 +1,491 @@
+* {
+    box-sizing: border-box;
+}
+
+html {
+    height: 100%;
+}
+
+body {
+    height: 100%;
+    padding: 0;
+    margin: 0;
+    
+    color: #286aab;
+    font-family: 'Roboto', sans-serif;
+    overflow-x: hidden;
+}
+
+body.player {
+    /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#282828+0,0e0e0e+99 */
+    background: rgb(40,40,40); /* Old browsers */
+    background: -moz-radial-gradient(center, ellipse cover, rgba(40,40,40,1) 0%, rgba(14,14,14,1) 99%); /* FF3.6+ */
+    background: -webkit-gradient(radial, center center, 0px, center center, 100%, color-stop(0%,rgba(40,40,40,1)), color-stop(99%,rgba(14,14,14,1))); /* Chrome,Safari4+ */
+    background: -webkit-radial-gradient(center, ellipse cover, rgba(40,40,40,1) 0%,rgba(14,14,14,1) 99%); /* Chrome10+,Safari5.1+ */
+    background: -o-radial-gradient(center, ellipse cover, rgba(40,40,40,1) 0%,rgba(14,14,14,1) 99%); /* Opera 12+ */
+    background: -ms-radial-gradient(center, ellipse cover, rgba(40,40,40,1) 0%,rgba(14,14,14,1) 99%); /* IE10+ */
+    background: radial-gradient(ellipse at center, rgba(40,40,40,1) 0%,rgba(14,14,14,1) 99%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#282828', endColorstr='#0e0e0e',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
+    background-size: cover !important;
+    background-position: center !important;
+}
+
+h1 {
+    font-weight: 500;
+}
+
+h3 {
+    font-weight: 400;
+}
+
+#debug {
+    position: absolute;
+    right: 10px;
+    bottom: 10px;
+    width: 15px;
+    height: 15px;
+    max-height: 150px;
+    padding: 4px;
+    color: white;
+    border: 1px solid #173d63;
+    font-size: 0.6em;
+    overflow: hidden;
+    z-index: 1;
+}
+
+#debug:hover {
+    width: 550px;
+    height: auto;
+    overflow: auto;
+}
+
+#lyrics {
+    position: absolute;
+    left: 10px;
+    bottom: 10px;
+    width: 15px;
+    height: 15px;
+    max-height: 350px;
+    padding: 4px;
+    color: white;
+    border: 1px solid #173d63;
+    font-size: 0.6em;
+    overflow: hidden;
+    z-index: 1;
+    transition: left 0.3s;
+}
+body.showing-playlist #lyrics {
+    left: 400px;
+}
+
+#lyrics:hover {
+    width: 450px;
+    height: auto;
+    overflow: auto;
+}
+
+
+.toggle-mute {
+    font-size: 1.5em;
+    left: 10px;
+    position: absolute;
+    top: 50px;
+    cursor: pointer;
+    transition: 0.3s;
+    z-index: 100;
+}
+
+.toggle-mute:hover {
+    color: white;
+}
+
+body.showing-playlist .toggle-mute {
+    left: 400px;
+}
+
+/* PLAYLIST */
+.lastfm-scrobble {
+    font-size: 1.5em;
+    left: 10px;
+    position: absolute;
+    top: 90px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.lastfm-scrobble:hover {
+    color: white;
+}
+
+.lastfm-scrobble-active {
+    color: #2ca928;
+}
+
+body.showing-playlist .lastfm-scrobble {
+    left: 400px;
+}
+
+/* PLAYLIST */
+.show-playlist {
+    font-size: 1.5em;
+    left: 10px;
+    position: absolute;
+    top: 10px;
+    cursor: pointer;
+    transition: 0.3s;
+    z-index: 100;
+}
+
+.show-playlist:hover {
+    color: white;
+}
+
+
+#playlist {
+    background: #173d63;
+    left: -390px;
+    position: absolute;
+    top: 0;
+    width: 390px;
+    bottom: 0;
+    transition: 0.3s;
+    padding: 20px;
+    color: white;
+    font-family: "raleway", sans-serif;
+    overflow-y: auto;
+    z-index: 100;
+}
+
+body.showing-playlist .show-playlist {
+    left: 400px;
+    color: white;
+}
+
+body.showing-playlist #playlist {
+    left: 0;
+}
+
+#playlist h1 {
+    margin-top: 5px;
+}
+
+#playlist ul {
+    list-style: none;
+    margin: 0;
+    margin-bottom: 30px;
+    padding: 0;
+}
+
+#playlist ul li {
+    font-weight: 300;
+    padding: 2px 0;
+    font-size: 0.9em;
+}
+
+#playlist ul li.artist-list {
+    padding: 6px 0;
+    font-weight: 500;
+}
+
+#playlist ul li li {
+    font-size: 1em;
+    margin-left: 20px;
+}
+
+#playlist ul li li:first-child {
+    padding-top: 4px;
+}
+
+#playlist ul li li strong {
+    font-weight: 300;
+}
+
+#playlist ul li.letter {
+    font-family: "Roboto", sans-serif;
+    font-weight: 500;
+    font-size: 1.5em;
+    margin: 25px -20px 6px;
+    padding: 4px 20px;
+    background: white;
+    color: #286aab;
+    cursor: pointer;
+}
+
+#playlist ul li strong {
+    font-weight: 500;
+}
+
+#playlist ul li a {
+    color: #999999;
+    float: right;
+    outline: none;
+}
+
+#playlist ul li a.play-youtube {
+    margin-right: -10px;
+}
+
+#playlist ul li a:hover {
+    color: white;
+}
+
+
+#search {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 280px;
+    z-index: 10;
+}
+
+#search .search-container {
+    border: 1px solid #173d63;
+    position: relative;
+}
+
+#search .search-container input {
+    color: white;
+    padding: 6px;
+    background: none;
+    outline: none;
+    width: 100%;
+    padding-right: 30px;
+    border: none;
+}
+
+#search .search-container input::-webkit-input-placeholder {
+    color: #286aab;
+}
+
+#search .search-container i {
+    position: absolute;
+    top: 4px;
+    right: 3px;
+    color: #173d63;
+}
+
+
+#search .search-results {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+#search .search-results li {
+    margin-top: 1px;
+    background: #173d63;
+    overflow: hidden;
+    padding: 6px;
+    position: relative;
+    cursor: pointer;
+    transition: 0.1s;
+}
+
+#search .search-results li.no-results {
+    font-weight: 400;
+    color: white;
+    cursor: default;
+    font-size: 0.9em;
+}
+
+#search .search-results li.added {
+    border-left: 4px solid #208820;
+    margin-left: -4px;
+    cursor: default;
+}
+
+#search .search-results li:not(.added):not(.no-results):hover {
+    background: #1d4c7c;
+}
+
+#search .search-results li:not(.added):not(.no-results):hover i {
+    opacity: 1;
+}
+
+#search .search-results li h3,
+#search .search-results li strong {
+    margin: 0;
+    margin-left: 45px;
+    display: block;
+}
+
+#search .search-results li h3 {
+    font-size: 14px;
+    color: #eef;
+    margin-bottom: 4px;
+}
+
+#search .search-results li strong {
+    font-size: 12px;
+    font-weight: 400;
+}
+
+#search .search-results li img {
+    float: left;
+    width: 36px;
+    height: 36px;
+}
+
+#search .search-results li i {
+    position: absolute;
+    left: 3px;
+    top: 8px;
+    font-size: 1.8em;
+    line-height: 35px;
+    color: white;
+    opacity: 0;
+    transition: 0.2s;
+    text-shadow: 0 0 4px #1d4c7c;
+}
+
+#container {
+    display: none;
+    position: relative;
+    top: 50%;
+    margin-top: -260px;
+    text-align: center;
+    transition: 0.3s;
+    left: 0;
+}
+
+.showing-playlist #container {
+    left: 200px;
+}
+
+#details h1,
+#details h3 {
+    margin: 0;
+    padding: 0;
+}
+
+#details h3 {
+    font-weight: 300;
+}
+
+#details .album-art {
+    margin-bottom: 8px;
+    position: relative;
+    display: inline-block;
+
+    transition:; 0.5s;
+}
+
+#details .album-art img {
+    width: 300px;
+    height: 300px;
+    float: left;
+}
+
+#details .album-art .progress {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 3px;
+    background: #286aab;
+    width: 0;
+}
+
+#details h3 {
+    margin-top: 4px;
+    color: #555555;
+}
+
+
+#controls .control {
+    position: relative;
+    display: inline-block;
+    margin: 1em;
+    padding: 0;
+    border: none;
+    background: none;
+    font-size: 1.4em;
+    transition: color 0.7s;
+    cursor: pointer;
+    
+    font-size: 2em;
+    color: #173d63;
+}
+
+#controls .control:hover {
+    color: #286aab;
+}
+
+#controls .control-active {
+    color: white !important;
+}
+
+#controls .control-deactive {
+    color: #444;
+}
+
+
+
+#controls .control::before {
+    position: absolute;
+    top: 50%;
+    left: -20px;
+    margin: -4px 0 0 0;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: rgba(111,148,182,0.3);
+    content: '';
+    opacity: 0;
+    -webkit-transform-origin: 35px 50%;
+    transform-origin: 35px 50%;
+}
+
+#controls .control.control--loading::before {
+    opacity: 1;
+    -webkit-animation-name: anim-effect-simo-3;
+    animation-name: anim-effect-simo-3;
+    -webkit-animation-duration: 0.4s;
+    animation-duration: 0.4s;
+    -webkit-animation-iteration-count: infinite;
+    animation-iteration-count: infinite;
+    -webkit-animation-timing-function: linear;
+    animation-timing-function: linear;
+    -webkit-animation-fill-mode: forwards;
+    animation-fill-mode: forwards;
+}
+
+@keyframes anim-effect-simo-1 {
+    0%, 100% {
+        -webkit-transform: scale3d(0, 0, 1);
+        transform: scale3d(0, 0, 1);
+        opacity: 0;
+    }
+    5%, 95% {
+        opacity: 1;
+        -webkit-transform: scale3d(1, 1, 1);
+        transform: scale3d(1, 1, 1);
+    }
+}
+
+@-webkit-keyframes anim-effect-simo-3 {
+    100% {
+        -webkit-transform: rotate3d(0, 0, 1, 360deg);
+        transform: rotate3d(0, 0, 1, 360deg);
+    }
+}
+
+@keyframes anim-effect-simo-3 {
+    100% {
+        -webkit-transform: rotate3d(0, 0, 1, 360deg);
+        transform: rotate3d(0, 0, 1, 360deg);
+    }
+}
+
+
+
+@media screen and (max-width: 500px) {
+    #search {
+        width: auto;
+        left: 10px;
+        bottom: 10px;
+       top: auto;
+    }
+
+    #lyrics, #debug { display: none; }
+}
+

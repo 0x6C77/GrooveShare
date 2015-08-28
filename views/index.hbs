@@ -1,0 +1,57 @@
+<!doctype html>
+
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+        <title>Grooveshare</title>
+
+        <link href='http://fonts.googleapis.com/css?family=Roboto:400,500,300' rel='stylesheet' type='text/css'>
+        <link href='http://fonts.googleapis.com/css?family=Raleway:400,500,300' rel='stylesheet' type='text/css'>
+        <link rel="stylesheet" href="css/fonts.css">
+        <link rel="stylesheet" href="css/main.css">
+
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+        <script src='/socket.io/socket.io.js'></script>
+    </head>
+
+    <body class="player">
+        <audio></audio>
+
+        <i class='icon-volume-off toggle-mute'></i>
+        <i class='icon-list show-playlist'></i>
+        <i class='icon-lastfm lastfm-scrobble'></i>
+        <div id="playlist">
+            <h1>Tracklist</h1>
+            <ul></ul>
+        </div>
+
+        <div id="lyrics"></div>
+        <div id="debug"></div>
+
+        <div id="search">
+            <div class='search-container'>
+                <input type="text" placeholder="Search" autocomplete="off"/>
+                <i class='icon-search'></i>
+            </div>
+        </div>  
+
+        <div id="container">
+            <div id="details">
+                <div class='album-art'>
+                    <img src=''/>
+                    <div class='progress'></div>
+                </div>
+                <h1 class='track'></h1>
+                <h3 class='artist'></h3>
+            </div>
+            <div id="controls">
+                <span class='control control--like'><i class='icon-up'></i></span>
+                <span class='control control--dislike'><i class='icon-down'></i></span>
+            </div>
+        </div>
+
+        <script src="/js/main.js"></script>
+    </body>
+</html>

@@ -1,0 +1,6 @@
+music/*
+node_modules
+import.js
+songs.db
+default.json
+images/*
