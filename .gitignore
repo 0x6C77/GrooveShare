@@ -1,7 +1,7 @@
 music/*
 node_modules
 import.js
-songs.db
+tracks.db
 default.json
 images/*
 data
