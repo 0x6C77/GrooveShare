@@ -1,3 +1,5 @@
+process.title = "GrooveShare"
+
 var fs = require('fs'),
     http = require('http'),
     path = require('path'),
