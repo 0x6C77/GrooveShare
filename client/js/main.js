@@ -1,5 +1,5 @@
 $(function() {
-    var baseURI = 'http://grooveshare.co.uk/',
+    var baseURI = '/',
         socket  = io();
 
 
@@ -11,12 +11,13 @@ $(function() {
         console.log(data);
     });
 
-    socket.on('playlist.now', function(data) {
+    socket.on('playlist.play', function(data) {
         $('#debug').prepend('Currently playing: ' + data.track.track + ' by ' + data.track.artist + ' - ' + data.position + "<br/>");
         player.play(data.track, data.position);
+        console.log(data);
     });
 
-    socket.on('playlist.next', function(data) {
+    socket.on('playlist.preload', function(data) {
         $('#debug').prepend('Preloading: ' + data.track + ' by ' + data.artist + "<br/>");
         player.preloadNext(data);
     });
@@ -65,7 +66,7 @@ $(function() {
 
 
     $('#search').on('click', '.search-results li:not(.added)', function(e) {
-        $.get('/add/' + $(this).data('mbid'), function(data) {
+        $.get('/add/' + $(this).data('id'), function(data) {
             // $('#debug').append(data + "<br/>");
         });
 
@@ -106,7 +107,7 @@ $(function() {
 
         if (data.length) {
             $(data).each(function() {
-                var tmpItem = $('<li>', { 'data-mbid': this.mbid });
+                var tmpItem = $('<li>', { 'data-id': this.id });
 
                 if (this.added) {
                     tmpItem.addClass('added');
@@ -148,10 +149,10 @@ $(function() {
         }
     });
 
-    $('#playlist').on('click', 'li a.queue-add[data-mbid]', function(e) {
+    $('#playlist').on('click', 'li a.queue-add[data-id]', function(e) {
         e.preventDefault();
 
-        socket.emit('playlist.queue', { mbid: $(this).data('mbid') });
+        socket.emit('playlist.queue', { id: $(this).data('id') });
     });
 
 
@@ -197,7 +198,7 @@ $(function() {
             link.append($('<i>', {class: 'icon-youtube'}));
             li.append(link);
 
-            link = $('<a>', {href: '#', 'data-mbid': track.mbid, 'class': 'queue-add'});
+            link = $('<a>', {href: '#', 'data-id': track.id, 'class': 'queue-add'});
             link.append($('<i>', {class: 'icon-plus'}));
             li.append(link);
 
@@ -258,9 +259,9 @@ $(function() {
             action = 'like';
         }
 
-        var mbid = player.currentTrack.mbid;
+        var id = player.currentTrack.id;
 
-        socket.emit('tracklist.rate', { action: action, mbid: mbid });
+        socket.emit('tracklist.rate', { action: action, id: id });
     });
 
 
@@ -319,7 +320,7 @@ $(function() {
 
             self.$preloader.attr('autoplay', false);
             self.$preloader.attr('preload', 'auto');
-            self.$preloader.attr('src', baseURI + 'music/' + track.mbid + '.mp3');
+            self.$preloader.attr('src', baseURI + 'music/' + track.id + '.mp3');
 
             self.preloader.volume = 0;
             self.preloader.load();
@@ -329,7 +330,7 @@ $(function() {
         this.play = function(track, position) {
             this.currentTrack = track;
 
-            console.log('Playing song: ' + this.currentTrack.mbid);
+            console.log('Playing song: ' + this.currentTrack.id);
 
             this.position = position;
             this.halfWay = false;
@@ -355,7 +356,7 @@ $(function() {
 
 
 
-            this.$player.attr('src', baseURI + 'music/' + this.currentTrack.mbid + '.mp3');
+            this.$player.attr('src', baseURI + 'music/' + this.currentTrack.id + '.mp3');
             this.player.load();
             this.player.play();
 
