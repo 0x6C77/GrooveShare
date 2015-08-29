@@ -35,7 +35,8 @@
         "lwip": "0.0.7",
         "blessed": "0.1.x",
         "sqlite3": "*",
-        "socket.io": "*"
+        "socket.io": "*",
+        "shortid": "*"
     },
     "readme": "",
     "readmeFilename": "README.md"
