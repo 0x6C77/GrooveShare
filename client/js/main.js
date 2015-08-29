@@ -278,6 +278,7 @@ $(function() {
             $(this).addClass('icon-volume-off').removeClass('icon-volume-on');
             player.player.volume = 0;
         }
+        localStorage.setItem('volume', player.player.volume);
     });
 
     var Player = function() {
@@ -296,6 +297,15 @@ $(function() {
 
         // Mute player by default
         this.player.volume = 0;
+
+        // Check if user has unmuted previously
+        console.log(localStorage.getItem('volume'));
+        if (localStorage.getItem('volume')) {
+            this.player.volume = localStorage.getItem('volume');
+            if (this.player.volume == 1) {
+                $('.toggle-mute').removeClass('icon-volume-off').addClass('icon-volume-on');
+            }
+        }
 
         // Add event listeners
         this.$player.on('timeupdate', function() {
@@ -339,8 +349,10 @@ $(function() {
 
             $('#details .track').text(this.currentTrack.track);
             $('#details .artist').text(this.currentTrack.artist);
-            $('#details img').attr('src', this.currentTrack.image).on('load', function() {
-                $('#container').fadeIn('slow');
+
+
+            $('<img>', {src: this.currentTrack.image}).on('load', function() {
+                $('#details img').attr('src', this.currentTrack.image);
             });
 
             // Remove current background
@@ -354,7 +366,7 @@ $(function() {
                 $('body').css({'background': css, 'background-size': 'cover', 'background-position': 'center'});
             });
 
-
+            $('#container').fadeIn('slow');
 
             this.$player.attr('src', baseURI + 'music/' + this.currentTrack.id + '.mp3');
             this.player.load();
