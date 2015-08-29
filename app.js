@@ -85,7 +85,9 @@ var io = socketIO.listen(server);
 
 // Watch TrackWatcher and emit changes
 trackWatcher.watch('play', function(track) {
-    io.sockets.emit('playlist.play', { track: track })
+    io.sockets.emit('playlist.play', { track: track });
+    // Update library
+    library.playingTrack(track.id);
 });
 
 trackWatcher.watch('preload', function(track) {
