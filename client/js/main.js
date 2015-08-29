@@ -352,7 +352,7 @@ $(function() {
 
 
             $('<img>', {src: this.currentTrack.image}).on('load', function() {
-                $('#details img').attr('src', this.currentTrack.image);
+                $('#details img').attr('src', self.currentTrack.image);
             });
 
             // Remove current background
