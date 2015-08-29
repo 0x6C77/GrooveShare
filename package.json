@@ -33,7 +33,10 @@
         "node-ffprobe": "1.2.x",
         "lyrics-fetcher": "1.0.1",
         "lwip": "0.0.7",
-        "blessed": "0.1.x"
+        "blessed": "0.1.x",
+        "sqlite3": "*",
+        "socket.io": "*",
+        "shortid": "*"
     },
     "readme": "",
     "readmeFilename": "README.md"

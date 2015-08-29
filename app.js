@@ -1,3 +1,5 @@
+process.title = "GrooveShare"
+
 var fs = require('fs'),
     http = require('http'),
     path = require('path'),
@@ -12,6 +14,12 @@ var fs = require('fs'),
     lyrics = require('lyrics-fetcher'),
     lwip = require('lwip'),
     config = require('config');
+
+// Check config file - Only checks for the existant of the entry, not the value.
+if(!config.has('LastFM.key') || !config.has('LastFM.secret') || !config.has('YouTube.key')){
+    console.log("Missing value in configuration file.\nBye Bye.");
+    process.exit();
+}
 
 var lastFM = new LastfmAPI({
     'api_key' : config.get('LastFM.key'),
