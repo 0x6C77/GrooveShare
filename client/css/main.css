@@ -484,6 +484,25 @@ body.showing-playlist #playlist {
     color: #444;
 }
 
+#controls .control .count {
+    position: absolute;
+    top: 0px;
+    left: 26px;
+    background: #286aab;
+    border-radius: 100px;
+    width: 15px;
+    height: 15px;
+    line-height: 15px;
+    color: white;
+    font-size: 11px;
+    text-align: center;
+}
+
+#controls .control--like .count {
+    left: auto;
+    right: 26px;
+}
+
 
 
 #controls .control::before {

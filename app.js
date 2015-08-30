@@ -105,11 +105,19 @@ io.on('connection', function(socket) {
     //     }
     // });
 
+    socket.on('register', function(data) {
+        socket.uuid = data.uuid;
+    });
+
     socket.on('playlist.queue', function(data) {
         trackWatcher.queueSong(data.id);
     });
 
     socket.on('tracklist.list', function(data) {
         socket.emit('tracklist.list', library.tracks);
+    });
+
+    socket.on('track.rate', function(data) {
+        library.rateTrack(data.id, socket.uuid, data.rating);
     });
 });

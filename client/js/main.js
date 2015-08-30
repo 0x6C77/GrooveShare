@@ -3,6 +3,23 @@ $(function() {
         socket  = io();
 
 
+    // ****************************
+    // UUID SETUP
+    // ****************************
+    var uuid = localStorage.getItem('uuid');
+    if (!uuid) {
+        uuid = guid();
+        localStorage.setItem('uuid', uuid);
+    }
+
+    function guid() {
+        function s4() {
+        return Math.floor((1 + Math.random()) * 0x10000)
+            .toString(16)
+            .substring(1);
+        }
+        return s4() + s4() + '-' + s4() + s4();
+    }
 
     // ****************************
     // TEMPLATES
@@ -39,6 +56,10 @@ $(function() {
     // ****************************
     // SOCKETS
     // ****************************
+    socket.on('connect', function() {
+        socket.emit('register', { uuid: uuid });
+    });
+
     socket.on('tracklist.add', function(data) {
         $('#debug').prepend('New track added: ' + data.track + ' - ' + data.artist + "<br/>");
     });
@@ -241,17 +262,36 @@ $(function() {
     // CONTROLS
     // ****************************    
     $('#controls .control').on('click', function(e) {
-        $(this).removeClass('control-deactive').addClass('control-active');
-        $(this).siblings('.control').removeClass('control-active').addClass('control-deactive');
+        if ($(this).hasClass('control-active')) {
+            return;
+        }
 
         var action = 'dislike';
         if ($(this).hasClass('control--like')) {
             action = 'like';
         }
 
+        // Updated count
+        if (action == 'like') {
+            $('#controls .control--like .count').text(parseInt($('#controls .control--like .count').text()) + 1).show();
+        } else {
+            $('#controls .control--dislike .count').text(parseInt($('#controls .control--dislike .count').text()) + 1).show();
+        }
+        // Did we rate oposite before
+        if ($(this).siblings('.control').hasClass('control-active')) {
+            $(this).siblings('.control').children('.count').text(parseInt($(this).siblings('.control').children('.count').text()) - 1);
+            if (parseInt($(this).siblings('.control').children('.count').text()) == 0) {
+                $(this).siblings('.control').children('.count').hide();
+            }
+        }
+        
+        $(this).removeClass('control-deactive').addClass('control-active');
+        $(this).siblings('.control').removeClass('control-active').addClass('control-deactive');
+
+
         var id = player.currentTrack.id;
 
-        socket.emit('tracklist.rate', { action: action, id: id });
+        socket.emit('track.rate', { id: id, uuid: uuid, rating: (action == 'like')?1:-1 });
     });
 
 
@@ -334,6 +374,34 @@ $(function() {
             $('#details .track').text(this.currentTrack.track);
             $('#details .artist').text(this.currentTrack.artist);
 
+
+            // Set ratings
+            $('#controls .control--like').removeClass('control-active').removeClass('control-deactive');
+            $('#controls .control--dislike').removeClass('control-active').removeClass('control-deactive');
+            if (track.up) {
+                $('#controls .control--like .count').text(track.up).show();
+            } else {
+                $('#controls .control--like .count').text(0).hide();
+            }
+            if (track.up_uuid) {
+                var u = track.up_uuid.split(',');
+                if (u.indexOf(uuid) > -1) {
+                    $('#controls .control--like').addClass('control-active');
+                    $('#controls .control--dislike').addClass('control-deactive');
+                }
+            }
+            if (track.down) {
+                $('#controls .control--dislike .count').text(track.down).show();
+            } else {
+                $('#controls .control--dislike .count').text(0).hide();
+            }
+            if (track.down_uuid) {
+                var u = track.down_uuid.split(',');
+                if (u.indexOf(uuid) > -1) {
+                    $('#controls .control--dislike').addClass('control-active');
+                    $('#controls .control--like').addClass('control-deactive');
+                }
+            }
 
             // Remove current album art
             $('#details img').attr('src', '');
