@@ -38,6 +38,22 @@ h3 {
     font-weight: 400;
 }
 
+input {
+    color: white;
+    padding: 6px;
+    background: none;
+    outline: none;
+    border: none;
+}
+
+input::-webkit-input-placeholder {
+    color: #286aab;
+}
+
+
+
+
+
 #debug {
     position: absolute;
     right: 10px;
@@ -169,6 +185,55 @@ body.showing-playlist #playlist {
     margin-top: 5px;
 }
 
+
+#playlist .tracklist-search {
+    border: 1px solid #173d63;
+    overflow: hidden;
+    position: absolute;
+    top: 20px;
+    left: 10px;
+    right: 10px;
+    height: 50px;
+}
+
+#playlist.show-search .tracklist-search {
+    border-color: white;
+    background: #173d63;
+}
+
+#playlist .tracklist-search i {
+    line-height: 46px;
+    font-size: 22px;
+    color: #999999;
+    cursor: pointer;
+    position: relative;
+    float: right;
+    margin-right: 5px;
+    z-index: 2;
+}
+
+#playlist .tracklist-search i:hover {
+    color: white;
+}
+
+#playlist input {
+    display: none;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    font-size: 22px;
+    padding-right: 42px;
+    padding-left: 10px;
+}
+
+#playlist.show-search input {
+    display: block;
+}
+
+
+
 #playlist ul {
     list-style: none;
     margin: 0;
@@ -244,17 +309,8 @@ body.showing-playlist #playlist {
 }
 
 #search .search-container input {
-    color: white;
-    padding: 6px;
-    background: none;
-    outline: none;
     width: 100%;
     padding-right: 30px;
-    border: none;
-}
-
-#search .search-container input::-webkit-input-placeholder {
-    color: #286aab;
 }
 
 #search .search-container i {

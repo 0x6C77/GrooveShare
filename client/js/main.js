@@ -61,7 +61,9 @@ $(function() {
         $('#debug').prepend(((data.action == 'like')?'Liked':'Disliked') + ': ' + data.track.track + ' by ' + data.track.artist + "<br/>");
     });
 
+    var tracklist;
     socket.on('tracklist.list', function(data) {
+        tracklist = data;
         renderTracklist(data);
     });
 
@@ -158,6 +160,35 @@ $(function() {
         socket.emit('playlist.queue', { id: $(this).data('id') });
     });
 
+    $('#playlist .tracklist-search i').on('click', function(e) {
+        e.preventDefault();
+        $('#playlist').toggleClass('show-search');
+
+        if (!$('#playlist').hasClass('show-search')) {
+            renderTracklist(tracklist);
+        }
+    });
+
+    $('#playlist .tracklist-search input').on('keyup', function() {
+        var q = $(this).val().toLowerCase();
+
+        if (!q) {
+            renderTracklist(tracklist);
+            return;
+        }
+
+        // Loop tracklist and build new list of results
+        var results = [];
+        for (var trackID in tracklist) {
+            track = tracklist[trackID];
+
+            if (track.track.toLowerCase().indexOf(q) != -1 || track.artist.toLowerCase().indexOf(q) != -1) {
+                results.push(track);
+            }
+        }
+
+        renderTracklist(results);
+    });
 
     function renderTracklist(data) {
         // Build and sort basic tracklist
