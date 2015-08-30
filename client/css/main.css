@@ -374,6 +374,16 @@ body.showing-playlist #playlist {
     width: 300px;
     height: 300px;
     float: left;
+    background: #151515;
+}
+
+#details .album-art img::after {
+    content: "";
+    font-family: "grooveshare";
+    font-size: 100px;
+    line-height: 300px;
+    color: #202020;
+    text-align: center;
 }
 
 #details .album-art .progress {
