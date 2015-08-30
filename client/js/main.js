@@ -169,7 +169,7 @@ $(function() {
         }
     });
 
-    $('#playlist .tracklist-search input').on('keyup', function() {
+    $('#playlist .tracklist-search input').on('keyup focus', function() {
         var q = $(this).val().toLowerCase();
 
         if (!q) {
