@@ -97,7 +97,7 @@ trackWatcher.watch('preload', function(track) {
 var connections = 0;
 io.on('connection', function(socket) {
     connections++;
-    console.log('New client [' + connections ']');
+    console.log('New client [' + connections + ']');
     socket.emit('playlist.play', { track: trackWatcher.playing, position: trackWatcher.getPosition() });
 
     // lyrics.fetch(tracker.track.artist, tracker.track.track, function (err, lyrics) {
@@ -126,6 +126,6 @@ io.on('connection', function(socket) {
 
     socket.on('disconnect', function () {
         connections--;
-        console.log('Lost client [' + connections ']');
+        console.log('Lost client [' + connections + ']');
     });
 });
