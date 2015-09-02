@@ -78,7 +78,6 @@ $(function() {
     });
 
     socket.on('track.added', function(data) {
-        console.log('added', data);
         toastr["info"](data.artist, data.track);
     });
 
@@ -97,8 +96,6 @@ $(function() {
     });
 
     socket.on('track.rated', function(data) {
-        console.log('rated', data);
-
         // Update UI
         if (data.rating) {
             $('#controls .control--like .count').text(parseInt($('#controls .control--like .count').text()) + 1).show();
