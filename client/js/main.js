@@ -2,6 +2,23 @@ $(function() {
     var baseURI = '/',
         socket  = io();
 
+    toastr.options = {
+        "closeButton": true,
+        "debug": false,
+        "newestOnTop": false,
+        "progressBar": false,
+        "positionClass": "toast-bottom-right",
+        "preventDuplicates": false,
+        "onclick": null,
+        "showDuration": "300",
+        "hideDuration": "1000",
+        "timeOut": "5000",
+        "extendedTimeOut": "1000",
+        "showEasing": "swing",
+        "hideEasing": "linear",
+        "showMethod": "fadeIn",
+        "hideMethod": "fadeOut"
+    }
 
     // ****************************
     // UUID SETUP
@@ -62,6 +79,7 @@ $(function() {
 
     socket.on('track.added', function(data) {
         console.log('added', data);
+        toastr["info"](data.artist, data.track);
     });
 
     socket.on('playlist.play', function(data) {
@@ -80,6 +98,13 @@ $(function() {
 
     socket.on('track.rated', function(data) {
         console.log('rated', data);
+
+        // Update UI
+        if (data.rating) {
+            $('#controls .control--like .count').text(parseInt($('#controls .control--like .count').text()) + 1).show();
+        } else {
+            $('#controls .control--like .count').text(parseInt($('#controls .control--like .count').text()) - 1).show();
+        }
     });
 
     var tracklist;
