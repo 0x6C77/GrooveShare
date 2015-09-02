@@ -90,6 +90,16 @@ trackWatcher.watch('play', function(track) {
     library.playingTrack(track.id);
 });
 
+trackWatcher.watch('added', function(trackID) {
+    // Look up ID
+    var track = library.lookupTrackID(trackID);
+    io.sockets.emit('track.added', track);
+});
+
+trackWatcher.watch('rated', function(data) {
+    io.sockets.emit('track.rated', data);
+});
+
 trackWatcher.watch('preload', function(track) {
     io.sockets.emit('playlist.preload', track);
 });

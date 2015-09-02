@@ -60,8 +60,8 @@ $(function() {
         socket.emit('register', { uuid: uuid });
     });
 
-    socket.on('tracklist.add', function(data) {
-        $('#debug').prepend('New track added: ' + data.track + ' - ' + data.artist + "<br/>");
+    socket.on('track.added', function(data) {
+        console.log('added', data);
     });
 
     socket.on('playlist.play', function(data) {
@@ -78,8 +78,8 @@ $(function() {
         $('#debug').prepend('Queued: ' + data.track + ' by ' + data.artist + "<br/>");
     });
 
-    socket.on('tracklist.rate', function(data) {
-        $('#debug').prepend(((data.action == 'like')?'Liked':'Disliked') + ': ' + data.track.track + ' by ' + data.track.artist + "<br/>");
+    socket.on('track.rated', function(data) {
+        console.log('rated', data);
     });
 
     var tracklist;
