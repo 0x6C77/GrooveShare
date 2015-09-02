@@ -94,7 +94,10 @@ trackWatcher.watch('preload', function(track) {
     io.sockets.emit('playlist.preload', track);
 });
 
+var connections = 0;
 io.on('connection', function(socket) {
+    connections++;
+    console.log('New client [' + connections ']');
     socket.emit('playlist.play', { track: trackWatcher.playing, position: trackWatcher.getPosition() });
 
     // lyrics.fetch(tracker.track.artist, tracker.track.track, function (err, lyrics) {
@@ -119,5 +122,10 @@ io.on('connection', function(socket) {
 
     socket.on('track.rate', function(data) {
         library.rateTrack(data.id, socket.uuid, data.rating);
+    });
+
+    socket.on('disconnect', function () {
+        connections--;
+        console.log('Lost client [' + connections ']');
     });
 });
