@@ -55,7 +55,7 @@ input::-webkit-input-placeholder {
     font-size: 1.5em;
     left: 10px;
     position: absolute;
-    top: 50px;
+    top: 90px;
     cursor: pointer;
     transition: 0.3s;
     z-index: 100;
@@ -96,7 +96,7 @@ body.showing-playlist .lastfm-scrobble {
     font-size: 1.5em;
     left: 10px;
     position: absolute;
-    top: 90px;
+    top: 50px;
     cursor: pointer;
     transition: 0.3s;
 }
