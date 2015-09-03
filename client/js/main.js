@@ -82,17 +82,11 @@ $(function() {
     });
 
     socket.on('playlist.play', function(data) {
-        $('#debug').prepend('Currently playing: ' + data.track.track + ' by ' + data.track.artist + ' - ' + data.position + "<br/>");
         player.play(data.track, data.position);
     });
 
     socket.on('playlist.preload', function(data) {
-        $('#debug').prepend('Preloading: ' + data.track + ' by ' + data.artist + "<br/>");
         player.preloadNext(data);
-    });
-
-    socket.on('playlist.queued', function(data) {
-        $('#debug').prepend('Queued: ' + data.track + ' by ' + data.artist + "<br/>");
     });
 
     socket.on('track.rated', function(data) {
@@ -120,10 +114,6 @@ $(function() {
     socket.on('tracklist.list', function(data) {
         tracklist = data;
         renderTracklist(data);
-    });
-
-    socket.on('song.lyrics', function(data) {
-        $('#lyrics').html(nl2br(data));
     });
 
     function nl2br(str, is_xhtml) {
@@ -155,9 +145,7 @@ $(function() {
 
 
     $('#search').on('click', '.search-results li:not(.added)', function(e) {
-        $.get('/add/' + $(this).data('id'), function(data) {
-            // $('#debug').append(data + "<br/>");
-        });
+        $.get('/add/' + $(this).data('id'));
 
         $(this).addClass('added');
     });

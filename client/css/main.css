@@ -51,56 +51,6 @@ input::-webkit-input-placeholder {
 }
 
 
-
-
-
-#debug {
-    position: absolute;
-    right: 10px;
-    bottom: 10px;
-    width: 15px;
-    height: 15px;
-    max-height: 150px;
-    padding: 4px;
-    color: white;
-    border: 1px solid #173d63;
-    font-size: 0.6em;
-    overflow: hidden;
-    z-index: 1;
-}
-
-#debug:hover {
-    width: 550px;
-    height: auto;
-    overflow: auto;
-}
-
-#lyrics {
-    position: absolute;
-    left: 10px;
-    bottom: 10px;
-    width: 15px;
-    height: 15px;
-    max-height: 350px;
-    padding: 4px;
-    color: white;
-    border: 1px solid #173d63;
-    font-size: 0.6em;
-    overflow: hidden;
-    z-index: 1;
-    transition: left 0.3s;
-}
-body.showing-playlist #lyrics {
-    left: 400px;
-}
-
-#lyrics:hover {
-    width: 450px;
-    height: auto;
-    overflow: auto;
-}
-
-
 .toggle-mute {
     font-size: 1.5em;
     left: 10px;
@@ -574,7 +524,5 @@ body.showing-playlist #playlist {
         bottom: 10px;
        top: auto;
     }
-
-    #lyrics, #debug { display: none; }
 }
 
