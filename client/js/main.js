@@ -48,7 +48,7 @@ $(function() {
                                 {{#each .}}\
                                     <li data-id="{{ id }}">\
                                     <img src="{{ image }}">\
-                                    <i class="fa fa-download"></i>\
+                                    <i class="fa fa-plus"></i>\
                                     <h3>{{ track }}</h3>\
                                     <strong>{{ artist }}</strong></li>\
                                 {{else}}\
@@ -62,7 +62,7 @@ $(function() {
                                 {{#each .}}\
                                     <li>\
                                         <a href="https://www.youtube.co.uk/watch?v={{ youtube }}" class="play-youtube" target="_blank">\
-                                            <i class="fa fa-youtube"></i>\
+                                            <i class="fa fa-youtube-play"></i>\
                                         </a>\
                                         <a href="#" data-id="{{ id }}" class="queue-add">\
                                             <i class="fa fa-plus"></i>\
@@ -347,11 +347,11 @@ $(function() {
 
     $('.toggle-mute').on('click', function(e) {
         if ($(this).hasClass('fa-volume-off')) {
-            $(this).removeClass('fa-volume-off').addClass('fa-volume-on');
+            $(this).removeClass('fa-volume-off').addClass('fa-volume');
             player.player.volume = 1;
             player.player.play();
         } else {
-            $(this).addClass('fa-volume-off').removeClass('fa-volume-on');
+            $(this).addClass('fa-volume-off').removeClass('fa-volume');
             player.player.volume = 0;
         }
         localStorage.setItem('volume', player.player.volume);
@@ -378,7 +378,7 @@ $(function() {
         if (localStorage.getItem('volume')) {
             this.player.volume = localStorage.getItem('volume');
             if (this.player.volume == 1) {
-                $('.toggle-mute').removeClass('fa-volume-off').addClass('fa-volume-on');
+                $('.toggle-mute').removeClass('fa-volume-off').addClass('fa-volume');
             }
         }
 
