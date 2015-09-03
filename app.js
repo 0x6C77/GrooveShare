@@ -15,7 +15,7 @@ var Library = require('./lib/library.js'),
 process.title = "Grooveshare"
 
 // Check config file - Only checks for the existant of the entry, not the value.
-if(!config.has('LastFM.key') || !config.has('LastFM.secret') || !config.has('YouTube.key')){
+if(!config.has('LastFM.key') || !config.has('LastFM.secret') || !config.has('YouTube.key') || !config.has('Service.port') || !config.has('Service.interface')){
     console.log("Missing value in configuration file, please see config/example.json.\nBye Bye.");
     process.exit();
 }
@@ -43,10 +43,8 @@ library.watch('added', function(trackID) {
 });
 
 // Express setup
-var server = app.listen(6872, function () {
-    var port = server.address().port;
-
-    console.log('Grooveshare running on :%s', port);
+var server = app.listen(config.get('Service.port'), config.get('Service.interface'), function () {
+    console.log('Grooveshare running on %s:%s'.green, config.get('Service.interface'), config.get('Service.port'));
 });
 
 // hbs.registerPartials(__dirname + '/client/views/partials');
