@@ -97,9 +97,9 @@ $(function() {
 
     socket.on('track.rated', function(data) {
         // Update UI
-        if (data.rating) {
+        if (data.rating > 0) {
             $('#controls .control--like .count').text(parseInt($('#controls .control--like .count').text()) + 1).show();
-        } else {
+        } else if (data.rating < 0) { {
             $('#controls .control--like .count').text(parseInt($('#controls .control--like .count').text()) - 1).show();
         }
     });
@@ -293,12 +293,13 @@ $(function() {
             action = 'like';
         }
 
-        // Updated count
-        if (action == 'like') {
-            $('#controls .control--like .count').text(parseInt($('#controls .control--like .count').text()) + 1).show();
-        } else {
-            $('#controls .control--dislike .count').text(parseInt($('#controls .control--dislike .count').text()) + 1).show();
-        }
+        // Updated count - removed due to doubling
+        // if (action == 'like') {
+        //     $('#controls .control--like .count').text(parseInt($('#controls .control--like .count').text()) + 1).show();
+        // } else {
+        //     $('#controls .control--dislike .count').text(parseInt($('#controls .control--dislike .count').text()) + 1).show();
+        // }
+
         // Did we rate oposite before
         if ($(this).siblings('.control').hasClass('control-active')) {
             $(this).siblings('.control').children('.count').text(parseInt($(this).siblings('.control').children('.count').text()) - 1);
