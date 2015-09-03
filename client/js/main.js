@@ -48,7 +48,7 @@ $(function() {
                                 {{#each .}}\
                                     <li data-id="{{ id }}">\
                                     <img src="{{ image }}">\
-                                    <i class="icon-plus"></i>\
+                                    <i class="fa fa-download"></i>\
                                     <h3>{{ track }}</h3>\
                                     <strong>{{ artist }}</strong></li>\
                                 {{else}}\
@@ -62,10 +62,10 @@ $(function() {
                                 {{#each .}}\
                                     <li>\
                                         <a href="https://www.youtube.co.uk/watch?v={{ youtube }}" class="play-youtube" target="_blank">\
-                                            <i class="icon-youtube"></i>\
+                                            <i class="fa fa-youtube"></i>\
                                         </a>\
                                         <a href="#" data-id="{{ id }}" class="queue-add">\
-                                            <i class="icon-plus"></i>\
+                                            <i class="fa fa-plus"></i>\
                                         </a>\
                                         <strong>{{ track }}</strong> - {{ artist }}</li>\
                                 {{/each}}\
@@ -346,12 +346,12 @@ $(function() {
     // ****************************
 
     $('.toggle-mute').on('click', function(e) {
-        if ($(this).hasClass('icon-volume-off')) {
-            $(this).removeClass('icon-volume-off').addClass('icon-volume-on');
+        if ($(this).hasClass('fa-volume-off')) {
+            $(this).removeClass('fa-volume-off').addClass('fa-volume-on');
             player.player.volume = 1;
             player.player.play();
         } else {
-            $(this).addClass('icon-volume-off').removeClass('icon-volume-on');
+            $(this).addClass('fa-volume-off').removeClass('fa-volume-on');
             player.player.volume = 0;
         }
         localStorage.setItem('volume', player.player.volume);
@@ -378,7 +378,7 @@ $(function() {
         if (localStorage.getItem('volume')) {
             this.player.volume = localStorage.getItem('volume');
             if (this.player.volume == 1) {
-                $('.toggle-mute').removeClass('icon-volume-off').addClass('icon-volume-on');
+                $('.toggle-mute').removeClass('fa-volume-off').addClass('fa-volume-on');
             }
         }
 
