@@ -57,11 +57,7 @@ $(function() {
                             </ul>';
     tmplSearchResuls = Handlebars.compile(tmplSearchResuls);
 
-    var tmplTrackList = '<div class="tracklist-search">\
-                            <input type="text" placeholder="Search" autocomplete="off"/>\
-                            <i class="fa fa-search"></i>\
-                         </div>\
-                         {{#if queue}}\
+    var tmplTrackList = '{{#if queue}}\
                          <h1>Queue</h1>\
                          <ul>\
                              {{#each queue}}\
@@ -250,7 +246,7 @@ $(function() {
         socket.emit('playlist.queue', { id: $(this).data('id') });
     });
 
-    $('#playlist .tracklist-search i').on('click', function(e) {
+    $('#playlist').on('click', ' .tracklist-search i', function(e) {
         e.preventDefault();
         $('#playlist').toggleClass('show-search');
 
@@ -259,7 +255,7 @@ $(function() {
         }
     });
 
-    $('#playlist .tracklist-search input').on('keyup focus', function() {
+    $('#playlist').on('keyup focus', '.tracklist-search input', function() {
         var q = $(this).val().toLowerCase();
 
         if (!q) {
@@ -300,7 +296,9 @@ $(function() {
             tracklist[letter].push(track);
         }
 
-        $('#playlist').html(tmplTrackList({tracklist: tracklist, queue: queue}));
+        // Remove previous playlist
+        $('#playlist > :not(.tracklist-search)').remove();
+        $('#playlist').append(tmplTrackList({tracklist: tracklist, queue: queue}));
         $('#playlist').scrollTop(0);
 
         $('body').addClass('showing-playlist');
