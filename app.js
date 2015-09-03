@@ -110,7 +110,17 @@ var connections = 0;
 io.on('connection', function(socket) {
     connections++;
     console.log('New client [' + connections + ']');
-    socket.emit('playlist.play', { track: trackWatcher.playing, position: trackWatcher.getPosition() });
+
+    // Get queue
+    var q = trackWatcher.queue,
+        queueLength = q.length,
+        queue = [];
+
+    for (n = 0; n < queueLength; n++) {
+        queue[n] = library.lookupTrackID(q[n]);
+    }
+
+    socket.emit('playlist.play', { track: trackWatcher.playing, position: trackWatcher.getPosition(), queue: queue });
 
     // lyrics.fetch(tracker.track.artist, tracker.track.track, function (err, lyrics) {
     //     if (!err && lyrics) {

@@ -109,14 +109,20 @@ $(function() {
     socket.on('playlist.play', function(data) {
         player.play(data.track, data.position);
 
-        // Is this the next thing in queue?
-        if (queue && queue.length) {
-            var queueLength = queue.length;
-            for (var i = 0; i < queueLength; i++) {
-                if (queue[i].track === data.track.track && queue[i].artist === data.track.artist) {
-                    queue = queue.slice(-(queueLength - i));
-                    console.log('Removing track from queue, ' + queue.length + ' tracks left');
-                    break;
+        if (data.queue) {
+            console.log(data);
+            queue = data.queue;
+            console.log(queue);
+        } else {
+            // Is this the next thing in queue?
+            if (queue && queue.length) {
+                var queueLength = queue.length;
+                for (var i = 0; i < queueLength; i++) {
+                    if (queue[i].track === data.track.track && queue[i].artist === data.track.artist) {
+                        queue = queue.slice(-(queueLength - i));
+                        console.log('Removing track from queue, ' + queue.length + ' tracks left');
+                        break;
+                    }
                 }
             }
         }
