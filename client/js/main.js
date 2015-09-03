@@ -100,7 +100,7 @@ $(function() {
         if (data.rating > 0) {
             $('#controls .control--like .count').text(parseInt($('#controls .control--like .count').text()) + 1).show();
         } else if (data.rating < 0) {
-            $('#controls .control--like .count').text(parseInt($('#controls .control--like .count').text()) - 1).show();
+            $('#controls .control--dislike .count').text(parseInt($('#controls .control--dislike .count').text()) + 1).show();
         }
     });
 
