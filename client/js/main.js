@@ -57,7 +57,29 @@ $(function() {
                             </ul>';
     tmplSearchResuls = Handlebars.compile(tmplSearchResuls);
 
-    var tmplTrackList = '   {{#each .}}\
+    var tmplTrackList = '<div class="tracklist-search">\
+                            <input type="text" placeholder="Search" autocomplete="off"/>\
+                            <i class="fa fa-search"></i>\
+                         </div>\
+                         {{#if queue}}\
+                         <h1>Queue</h1>
+                         <ul>\
+                             {{#each queue}}\
+                                <li>\
+                                    <a href="https://www.youtube.co.uk/watch?v={{ youtube }}" class="play-youtube" target="_blank">\
+                                        <i class="fa fa-youtube-play"></i>\
+                                    </a>\
+                                    <a href="#" data-id="{{ id }}" class="queue-add">\
+                                        <i class="fa fa-plus"></i>\
+                                    </a>\
+                                    <strong>{{ track }}</strong> - {{ artist }}\
+                                </li>\
+                             {{/each}}\
+                         </ul>\
+                         {{/if}}\
+                         <h1>Tracklist</h1>\
+                         <ul>\
+                             {{#each tracklist}}\
                                 <li class="letter">{{ @key }}</li>\
                                 {{#each .}}\
                                     <li>\
@@ -69,7 +91,8 @@ $(function() {
                                         </a>\
                                         <strong>{{ track }}</strong> - {{ artist }}</li>\
                                 {{/each}}\
-                            {{/each}}';
+                             {{/each}}\
+                         </ul>';
     tmplTrackList = Handlebars.compile(tmplTrackList);
 
 
@@ -95,9 +118,13 @@ $(function() {
 
         // Is this the next thing in queue?
         if (queue && queue.length) {
-            if (queue[0].track === data.track.track && queue[0].artist === data.track.artist) {
-                queue.shift();
-                console.log('Removing track from queue, ' + queue.length + ' tracks left');
+            var queueLength = queue.length;
+            for (var i = 0; i < queueLength; i++) {
+                if (queue[i].track === data.track.track && queue[i].artist === data.track.artist) {
+                    queue = queue.slice(-(queueLength - i));
+                    console.log('Removing track from queue, ' + queue.length + ' tracks left');
+                    break;
+                }
             }
         }
     });
@@ -276,7 +303,7 @@ $(function() {
             tracklist[letter].push(track);
         }
 
-        $('#playlist ul').html(tmplTrackList(tracklist));
+        $('#playlist').html(tmplTrackList({tracklist: tracklist, queue: queue}));
         $('#playlist').scrollTop(0);
 
         $('body').addClass('showing-playlist');
