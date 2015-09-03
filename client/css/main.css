@@ -226,7 +226,6 @@ body.showing-playlist .lastfm-scrobble {
     padding: 4px 20px;
     background: white;
     color: #286aab;
-    cursor: pointer;
 }
 
 #sidebar ul li strong {
@@ -465,8 +464,6 @@ body.showing-playlist .lastfm-scrobble {
     right: 26px;
 }
 
-
-
 #controls .control::before {
     position: absolute;
     top: 50%;
@@ -481,48 +478,6 @@ body.showing-playlist .lastfm-scrobble {
     -webkit-transform-origin: 35px 50%;
     transform-origin: 35px 50%;
 }
-
-#controls .control.control--loading::before {
-    opacity: 1;
-    -webkit-animation-name: anim-effect-simo-3;
-    animation-name: anim-effect-simo-3;
-    -webkit-animation-duration: 0.4s;
-    animation-duration: 0.4s;
-    -webkit-animation-iteration-count: infinite;
-    animation-iteration-count: infinite;
-    -webkit-animation-timing-function: linear;
-    animation-timing-function: linear;
-    -webkit-animation-fill-mode: forwards;
-    animation-fill-mode: forwards;
-}
-
-@keyframes anim-effect-simo-1 {
-    0%, 100% {
-        -webkit-transform: scale3d(0, 0, 1);
-        transform: scale3d(0, 0, 1);
-        opacity: 0;
-    }
-    5%, 95% {
-        opacity: 1;
-        -webkit-transform: scale3d(1, 1, 1);
-        transform: scale3d(1, 1, 1);
-    }
-}
-
-@-webkit-keyframes anim-effect-simo-3 {
-    100% {
-        -webkit-transform: rotate3d(0, 0, 1, 360deg);
-        transform: rotate3d(0, 0, 1, 360deg);
-    }
-}
-
-@keyframes anim-effect-simo-3 {
-    100% {
-        -webkit-transform: rotate3d(0, 0, 1, 360deg);
-        transform: rotate3d(0, 0, 1, 360deg);
-    }
-}
-
 
 
 @media screen and (max-width: 500px) {

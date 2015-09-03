@@ -59,7 +59,7 @@ $(function() {
 
     var tmplTrackList = '{{#if queue}}\
                          <h1>Queue</h1>\
-                         <ul>\
+                         <ul class="sidebar-queue">\
                              {{#each queue}}\
                                 <li>\
                                     <a href="https://www.youtube.co.uk/watch?v={{ youtube }}" class="play-youtube" target="_blank">\
@@ -71,7 +71,7 @@ $(function() {
                          </ul>\
                          {{/if}}\
                          <h1>Tracklist</h1>\
-                         <ul>\
+                         <ul class="sidebar-tracklist">\
                              {{#each tracklist}}\
                                 <li class="letter">{{ @key }}</li>\
                                 {{#each .}}\
@@ -88,6 +88,14 @@ $(function() {
                          </ul>';
     tmplTrackList = Handlebars.compile(tmplTrackList);
 
+    var tmplTrackListItem = '<li>\
+                                <a href="https://www.youtube.co.uk/watch?v={{ youtube }}" class="play-youtube" target="_blank">\
+                                    <i class="fa fa-youtube-play"></i>\
+                                </a>\
+                                <strong>{{ track }}</strong> - {{ artist }}\
+                             </li>';
+    tmplTrackListItem = Handlebars.compile(tmplTrackListItem);
+
 
     // ****************************
     // SOCKETS
@@ -103,6 +111,7 @@ $(function() {
 
     socket.on('track.queued', function(data) {
         toastr["info"](data.track + ' - ' + data.artist, 'Queued');
+        $('#sidebar .sidebar-queue').append(tmplTrackListItem(data));
         queue.push(data);
     });
 
@@ -110,17 +119,21 @@ $(function() {
         player.play(data.track, data.position);
 
         if (data.queue) {
-            console.log(data);
             queue = data.queue;
-            console.log(queue);
         } else {
             // Is this the next thing in queue?
             if (queue && queue.length) {
                 var queueLength = queue.length;
                 for (var i = 0; i < queueLength; i++) {
+                    console.log(queue[i], data.track);
                     if (queue[i].track === data.track.track && queue[i].artist === data.track.artist) {
-                        queue = queue.slice(-(queueLength - i));
-                        console.log('Removing track from queue, ' + queue.length + ' tracks left');
+                        queue = queue.slice(i+1);
+
+                        // Remove items from queue list
+                        $("#sidebar .sidebar-queue > li:lt(i+1)").slideUp(function() {
+                            $(this).remove();
+                        });
+
                         break;
                     }
                 }
@@ -133,6 +146,8 @@ $(function() {
     });
 
     socket.on('track.rated', function(data) {
+        console.log(rated);
+
         // Update UI
         if (data.rating > 0) {
             $('#controls .control--like .count').text(parseInt($('#controls .control--like .count').text()) + 1).show();
@@ -228,7 +243,6 @@ $(function() {
     $('.show-sidebar').on('click', function(e) {
         if (!$('body').hasClass('showing-sidebar')) {
             if (systemTrackList && tracklist.length) {
-                console.log('rendering from memory');
                 renderTracklist(tracklist);
             } else {
                 socket.emit('tracklist.list');
