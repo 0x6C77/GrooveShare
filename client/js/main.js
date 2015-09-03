@@ -347,11 +347,11 @@ $(function() {
 
     $('.toggle-mute').on('click', function(e) {
         if ($(this).hasClass('fa-volume-off')) {
-            $(this).removeClass('fa-volume-off').addClass('fa-volume');
+            $(this).removeClass('fa-volume-off').addClass('fa-volume-up');
             player.player.volume = 1;
             player.player.play();
         } else {
-            $(this).addClass('fa-volume-off').removeClass('fa-volume');
+            $(this).addClass('fa-volume-off').removeClass('fa-volume-up');
             player.player.volume = 0;
         }
         localStorage.setItem('volume', player.player.volume);
@@ -378,7 +378,7 @@ $(function() {
         if (localStorage.getItem('volume')) {
             this.player.volume = localStorage.getItem('volume');
             if (this.player.volume == 1) {
-                $('.toggle-mute').removeClass('fa-volume-off').addClass('fa-volume');
+                $('.toggle-mute').removeClass('fa-volume-off').addClass('fa-volume-up');
             }
         }
 
