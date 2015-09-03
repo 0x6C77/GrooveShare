@@ -96,8 +96,8 @@ $(function() {
         // Is this the next thing in queue?
         if (queue && queue.length) {
             if (queue[0].track === data.track.track && queue[0].artist === data.track.artist) {
-                console.log('Removing track from queue, ' + queue.length + ' tracks left');
                 queue.shift();
+                console.log('Removing track from queue, ' + queue.length + ' tracks left');
             }
         }
     });
@@ -129,12 +129,6 @@ $(function() {
 
     var systemTrackList = false;
     socket.on('tracklist.list', function(data) {
-        if (systemTrackList && tracklist.length) {
-            console.log('rendering from memory');
-            renderTracklist(tracklist);
-            return;
-        }
-
         tracklist = data;
         renderTracklist(data);
         systemTrackList = true; // Don't ask again
@@ -207,7 +201,12 @@ $(function() {
     // ****************************    
     $('.show-playlist').on('click', function(e) {
         if (!$('body').hasClass('showing-playlist')) {
-            socket.emit('tracklist.list');
+            if (systemTrackList && tracklist.length) {
+                console.log('rendering from memory');
+                renderTracklist(tracklist);
+            } else {
+                socket.emit('tracklist.list');
+            }
         } else {
             $('body').removeClass('showing-playlist');
         }
