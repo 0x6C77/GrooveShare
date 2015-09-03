@@ -20,6 +20,9 @@ $(function() {
         "hideMethod": "fadeOut"
     }
 
+    var queue = [],
+        tracklist = [];
+
     // ****************************
     // UUID SETUP
     // ****************************
@@ -79,14 +82,24 @@ $(function() {
 
     socket.on('track.added', function(data) {
         toastr["info"](data.track + ' - ' + data.artist, 'Added');
+        tracklist.push(data);
     });
 
     socket.on('track.queued', function(data) {
         toastr["info"](data.track + ' - ' + data.artist, 'Queued');
+        queue.push(data);
     });
 
     socket.on('playlist.play', function(data) {
         player.play(data.track, data.position);
+
+        // Is this the next thing in queue?
+        if (queue && queue.length) {
+            if (queue[0].track === data.track.track && queue[0].artist === data.track.artist) {
+                console.log('Removing track from queue, ' + queue.length + ' tracks left');
+                queue.shift();
+            }
+        }
     });
 
     socket.on('playlist.preload', function(data) {
@@ -114,10 +127,17 @@ $(function() {
         }
     });
 
-    var tracklist;
+    var systemTrackList = false;
     socket.on('tracklist.list', function(data) {
+        if (systemTrackList && tracklist.length) {
+            console.log('rendering from memory');
+            renderTracklist(tracklist);
+            return;
+        }
+
         tracklist = data;
         renderTracklist(data);
+        systemTrackList = true; // Don't ask again
     });
 
     function nl2br(str, is_xhtml) {
