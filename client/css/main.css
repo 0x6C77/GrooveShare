@@ -257,6 +257,11 @@ body.showing-playlist #playlist {
 
 #playlist ul li a.play-youtube {
     margin-right: -10px;
+    margin-left: 8px;
+}
+
+#playlist ul li a.queue-add {
+    margin-left: 5px;
 }
 
 #playlist ul li a:hover {
@@ -353,9 +358,9 @@ body.showing-playlist #playlist {
 
 #search .search-results li i {
     position: absolute;
-    left: 3px;
+    left: 10px;
     top: 8px;
-    font-size: 1.8em;
+    font-size: 32px;
     line-height: 35px;
     color: white;
     opacity: 0;
