@@ -99,7 +99,7 @@ $(function() {
         // Update UI
         if (data.rating > 0) {
             $('#controls .control--like .count').text(parseInt($('#controls .control--like .count').text()) + 1).show();
-        } else if (data.rating < 0) { {
+        } else if (data.rating < 0) {
             $('#controls .control--like .count').text(parseInt($('#controls .control--like .count').text()) - 1).show();
         }
     });
