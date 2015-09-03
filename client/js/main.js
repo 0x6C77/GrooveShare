@@ -110,9 +110,13 @@ $(function() {
     });
 
     socket.on('track.queued', function(data) {
-        toastr["info"](data.track + ' - ' + data.artist, 'Queued');
-        $('#sidebar .sidebar-queue').append(tmplTrackListItem(data));
+        // toastr["info"](data.track + ' - ' + data.artist, 'Queued');
         queue.push(data);
+        if ($('#sidebar .sidebar-queue').length) {
+            $('#sidebar .sidebar-queue').append(tmplTrackListItem(data));
+        } else {
+            renderTracklist(tracklist);
+        }
     });
 
     socket.on('playlist.play', function(data) {
@@ -125,13 +129,17 @@ $(function() {
             if (queue && queue.length) {
                 var queueLength = queue.length;
                 for (var i = 0; i < queueLength; i++) {
-                    console.log(queue[i], data.track);
                     if (queue[i].track === data.track.track && queue[i].artist === data.track.artist) {
                         queue = queue.slice(i+1);
 
                         // Remove items from queue list
-                        $("#sidebar .sidebar-queue > li:lt(i+1)").slideUp(function() {
+                        $("#sidebar .sidebar-queue > li:lt("+(i+1)+")").slideUp(function() {
                             $(this).remove();
+
+                            if (!$('.sidebar-queue li').length) {
+                                $('#sidebar .sidebar-content > h1:eq(0)').remove();
+                                $('.sidebar-queue').remove();
+                            }
                         });
 
                         break;
@@ -146,25 +154,15 @@ $(function() {
     });
 
     socket.on('track.rated', function(data) {
-        console.log(rated);
-
         // Update UI
-        if (data.rating > 0) {
-            $('#controls .control--like .count').text(parseInt($('#controls .control--like .count').text()) + 1).show();
-        } else if (data.rating < 0) {
-            $('#controls .control--dislike .count').text(parseInt($('#controls .control--dislike .count').text()) + 1).show();
+        $('#controls .control--like .count').text(data.up).show();
+        if (data.up < 1) {
+            $('#controls .control--like .count').hide();
         }
 
-        if (data.rating > 1) {
-            $('#controls .control--dislike .count').text(parseInt($('#controls .control--dislike .count').text()) - 1);
-            if (parseInt($('#controls .control--dislike .count').text()) < 1) {
-                $('#controls .control--dislike .count').hide();
-            }
-        } else if (data.rating < -1) {
-            $('#controls .control--like .count').text(parseInt($('#controls .control--like .count').text()) - 1);
-            if (parseInt($('#controls .control--like .count').text()) < 1) {
-                $('#controls .control--like .count').hide();
-            }
+        $('#controls .control--dislike .count').text(data.down).show();
+        if (data.down < 1) {
+            $('#controls .control--dislike .count').hide();
         }
     });
 

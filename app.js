@@ -104,6 +104,9 @@ library.watch('added', function(trackID) {
 
 library.watch('rated', function(data) {
     io.sockets.emit('track.rated', data);
+
+    // Update trackWatcher
+    trackWatcher.updateRatings(data);
 });
 
 var connections = 0;
