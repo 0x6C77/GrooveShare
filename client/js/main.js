@@ -108,7 +108,7 @@ $(function() {
             if (parseInt($('#controls .control--dislike .count').text()) < 1) {
                 $('#controls .control--dislike .count').text().hide();
             }
-        } else if (data.rating > 1) {
+        } else if (data.rating < -1) {
             $('#controls .control--like .count').text(parseInt($('#controls .control--like .count').text()) - 1).show();
             if (parseInt($('#controls .control--like .count').text()) < 1) {
                 $('#controls .control--like .count').text().hide();
