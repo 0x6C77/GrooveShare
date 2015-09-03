@@ -62,7 +62,7 @@ $(function() {
                             <i class="fa fa-search"></i>\
                          </div>\
                          {{#if queue}}\
-                         <h1>Queue</h1>
+                         <h1>Queue</h1>\
                          <ul>\
                              {{#each queue}}\
                                 <li>\
