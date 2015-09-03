@@ -51,24 +51,6 @@ input::-webkit-input-placeholder {
 }
 
 
-.toggle-mute {
-    font-size: 1.5em;
-    left: 10px;
-    position: absolute;
-    top: 50px;
-    cursor: pointer;
-    transition: 0.3s;
-    z-index: 100;
-}
-
-.toggle-mute:hover {
-    color: white;
-}
-
-body.showing-playlist .toggle-mute {
-    left: 400px;
-}
-
 /* PLAYLIST */
 .lastfm-scrobble {
     font-size: 1.5em;
@@ -91,52 +73,73 @@ body.showing-playlist .lastfm-scrobble {
     left: 400px;
 }
 
-/* PLAYLIST */
-.show-playlist {
-    font-size: 1.5em;
-    left: 10px;
-    position: absolute;
-    top: 10px;
-    cursor: pointer;
-    transition: 0.3s;
-    z-index: 100;
-}
-
-.show-playlist:hover {
-    color: white;
-}
-
-
-#playlist {
-    background: #173d63;
+/* SIDEBAR */
+#sidebar {
     left: -390px;
     position: absolute;
     top: 0;
-    width: 390px;
     bottom: 0;
+    padding-right: 50px;
     transition: 0.3s;
+}
+
+.showing-sidebar #sidebar {
+    left: 0;
+}
+
+.sidebar-icons {
+    position: absolute;
+    width: 50px;
+    height: 100%;
+    right: 0;
+    top: 0;
+}
+
+.sidebar-icons i {
+    font-size: 30px;
+    cursor: pointer;
+    transition: 0.3s;
+    z-index: 100;
+    width: 100%;
+    text-align: center;
+    padding-top: 10px;
+}
+
+.sidebar-icons > span {
+    float: left;
+    margin-left: 50px;
+    width: 120px;
+    color: #444;
+    margin-top: -25px;
+    opacity: 0;
+    transition: 0.5s;
+    pointer-events: none;
+}
+
+.sidebar-icons:hover > span {
+    opacity: 1;
+}
+
+
+.sidebar-content {
+    background: #173d63;
+    width: 390px;
     padding: 20px;
     color: white;
     font-family: "raleway", sans-serif;
     overflow-y: auto;
     z-index: 100;
+    position: relative;
+    height: 100%;
 }
 
-body.showing-playlist .show-playlist {
-    left: 400px;
-    color: white;
-}
 
-body.showing-playlist #playlist {
-    left: 0;
-}
-
-#playlist h1 {
+#sidebar h1 {
     margin-top: 5px;
 }
 
 
-#playlist .tracklist-search {
+#sidebar .tracklist-search {
     border: 1px solid #173d63;
     overflow: hidden;
     position: absolute;
@@ -146,12 +149,12 @@ body.showing-playlist #playlist {
     height: 50px;
 }
 
-#playlist.show-search .tracklist-search {
+#sidebar.show-search .tracklist-search {
     border-color: white;
     background: #173d63;
 }
 
-#playlist .tracklist-search i {
+#sidebar .tracklist-search i {
     line-height: 46px;
     font-size: 22px;
     color: #999999;
@@ -162,11 +165,11 @@ body.showing-playlist #playlist {
     z-index: 2;
 }
 
-#playlist .tracklist-search i:hover {
+#sidebar .tracklist-search i:hover {
     color: white;
 }
 
-#playlist input {
+#sidebar input {
     display: none;
     position: absolute;
     left: 0;
@@ -178,44 +181,44 @@ body.showing-playlist #playlist {
     padding-left: 10px;
 }
 
-#playlist.show-search input {
+#sidebar.show-search input {
     display: block;
 }
 
 
 
-#playlist ul {
+#sidebar ul {
     list-style: none;
     margin: 0;
     margin-bottom: 30px;
     padding: 0;
 }
 
-#playlist ul li {
+#sidebar ul li {
     font-weight: 300;
     padding: 2px 0;
     font-size: 0.9em;
 }
 
-#playlist ul li.artist-list {
+#sidebar ul li.artist-list {
     padding: 6px 0;
     font-weight: 500;
 }
 
-#playlist ul li li {
+#sidebar ul li li {
     font-size: 1em;
     margin-left: 20px;
 }
 
-#playlist ul li li:first-child {
+#sidebar ul li li:first-child {
     padding-top: 4px;
 }
 
-#playlist ul li li strong {
+#sidebar ul li li strong {
     font-weight: 300;
 }
 
-#playlist ul li.letter {
+#sidebar ul li.letter {
     font-family: "Roboto", sans-serif;
     font-weight: 500;
     font-size: 1.5em;
@@ -226,26 +229,26 @@ body.showing-playlist #playlist {
     cursor: pointer;
 }
 
-#playlist ul li strong {
+#sidebar ul li strong {
     font-weight: 500;
 }
 
-#playlist ul li a {
+#sidebar ul li a {
     color: #999999;
     float: right;
     outline: none;
 }
 
-#playlist ul li a.play-youtube {
+#sidebar ul li a.play-youtube {
     margin-right: -10px;
     margin-left: 8px;
 }
 
-#playlist ul li a.queue-add {
+#sidebar ul li a.queue-add {
     margin-left: 5px;
 }
 
-#playlist ul li a:hover {
+#sidebar ul li a:hover {
     color: white;
 }
 
@@ -359,7 +362,7 @@ body.showing-playlist #playlist {
     left: 0;
 }
 
-.showing-playlist #container {
+.showing-sidebar #container {
     left: 200px;
 }
 
@@ -389,8 +392,8 @@ body.showing-playlist #playlist {
 }
 
 #details .album-art img::after {
-    content: "";
-    font-family: "grooveshare";
+    content: "";
+    font-family: FontAwesome;
     font-size: 100px;
     line-height: 300px;
     width: 100%;

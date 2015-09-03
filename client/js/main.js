@@ -219,8 +219,8 @@ $(function() {
     // ****************************
     // PLAYLIST
     // ****************************    
-    $('.show-playlist').on('click', function(e) {
-        if (!$('body').hasClass('showing-playlist')) {
+    $('.show-sidebar').on('click', function(e) {
+        if (!$('body').hasClass('showing-sidebar')) {
             if (systemTrackList && tracklist.length) {
                 console.log('rendering from memory');
                 renderTracklist(tracklist);
@@ -228,34 +228,27 @@ $(function() {
                 socket.emit('tracklist.list');
             }
         } else {
-            $('body').removeClass('showing-playlist');
+            $('body').removeClass('showing-sidebar');
+            $('#sidebar').removeClass('show-search');
         }
     });
 
-    $('#playlist').on('click', 'li.letter', function(e) {
-        e.preventDefault();
-
-        if ($(this).nextAll('.letter:first').length) {
-            $('#playlist').animate({scrollTop: $('#playlist').scrollTop() + $(this).nextAll('.letter:first').position().top + 25}, 'fast');
-        }
-    });
-
-    $('#playlist').on('click', 'li a.queue-add[data-id]', function(e) {
+    $('#sidebar').on('click', 'li a.queue-add[data-id]', function(e) {
         e.preventDefault();
 
         socket.emit('playlist.queue', { id: $(this).data('id') });
     });
 
-    $('#playlist').on('click', ' .tracklist-search i', function(e) {
+    $('#sidebar').on('click', ' .tracklist-search i', function(e) {
         e.preventDefault();
-        $('#playlist').toggleClass('show-search');
+        $('#sidebar').toggleClass('show-search');
 
-        if (!$('#playlist').hasClass('show-search')) {
+        if (!$('#sidebar').hasClass('show-search')) {
             renderTracklist(tracklist);
         }
     });
 
-    $('#playlist').on('keyup focus', '.tracklist-search input', function() {
+    $('#sidebar').on('keyup focus', '.tracklist-search input', function() {
         var q = $(this).val().toLowerCase();
 
         if (!q) {
@@ -297,11 +290,11 @@ $(function() {
         }
 
         // Remove previous playlist
-        $('#playlist > :not(.tracklist-search)').remove();
-        $('#playlist').append(tmplTrackList({tracklist: tracklist, queue: queue}));
-        $('#playlist').scrollTop(0);
+        $('#sidebar .sidebar-content > :not(.tracklist-search)').remove();
+        $('#sidebar .sidebar-content').append(tmplTrackList({tracklist: tracklist, queue: queue}));
+        $('#sidebar .sidebar-content').scrollTop(0);
 
-        $('body').addClass('showing-playlist');
+        $('body').addClass('showing-sidebar');
     }
 
     function playlistSort(a, b) {

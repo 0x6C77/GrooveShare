@@ -20,13 +20,19 @@
     <body class="player">
         <audio></audio>
 
-        <i class='fa fa-volume-off toggle-mute'></i>
-        <i class='fa fa-th-list show-playlist'></i>
-        <!-- <i class='fa fa-lastfm lastfm-scrobble'></i> -->
-        <div id="playlist">
-            <div class='tracklist-search'>
-                <input type="text" placeholder="Search" autocomplete="off"/>
-                <i class='fa fa-search'></i>
+        <div id="sidebar">
+            <div class="sidebar-content">
+                <div class='tracklist-search'>
+                    <input type="text" placeholder="Search" autocomplete="off"/>
+                    <i class='fa fa-search'></i>
+                </div>
+            </div>
+            <div class='sidebar-icons'>
+                <i class='fa fa-bars show-sidebar'></i>
+                <span>Show sidebar</span>
+                <i class='fa fa-volume-off toggle-mute'></i>
+                <span>Toggle mute</span>
+                <!-- <i class='fa fa-lastfm lastfm-scrobble'></i> -->
             </div>
         </div>
 
