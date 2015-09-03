@@ -69,9 +69,6 @@ $(function() {
                                     <a href="https://www.youtube.co.uk/watch?v={{ youtube }}" class="play-youtube" target="_blank">\
                                         <i class="fa fa-youtube-play"></i>\
                                     </a>\
-                                    <a href="#" data-id="{{ id }}" class="queue-add">\
-                                        <i class="fa fa-plus"></i>\
-                                    </a>\
                                     <strong>{{ track }}</strong> - {{ artist }}\
                                 </li>\
                              {{/each}}\
