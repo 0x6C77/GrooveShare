@@ -78,7 +78,11 @@ $(function() {
     });
 
     socket.on('track.added', function(data) {
-        toastr["info"](data.artist, data.track);
+        toastr["info"](data.track + ' - ' + data.artist, 'Added');
+    });
+
+    socket.on('track.queued', function(data) {
+        toastr["info"](data.track + ' - ' + data.artist, 'Queued');
     });
 
     socket.on('playlist.play', function(data) {
@@ -103,7 +107,7 @@ $(function() {
                 $('#controls .control--dislike .count').hide();
             }
         } else if (data.rating < -1) {
-            $('#controls .control--like .count').text(parseInt($('#controls .control--like .count').text()) - 1).show();
+            $('#controls .control--like .count').text(parseInt($('#controls .control--like .count').text()) - 1);
             if (parseInt($('#controls .control--like .count').text()) < 1) {
                 $('#controls .control--like .count').hide();
             }

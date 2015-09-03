@@ -92,6 +92,10 @@ trackWatcher.watch('preload', function(track) {
     io.sockets.emit('playlist.preload', track);
 });
 
+trackWatcher.watch('queued', function(track) {
+    io.sockets.emit('track.queued', track);
+});
+
 library.watch('added', function(trackID) {
     // Look up ID
     var track = library.lookupTrackID(trackID);
