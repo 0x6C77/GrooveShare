@@ -145,6 +145,7 @@ io.on('connection', function(socket) {
 
         // Create listener object
         socket.listener = new Listener(socket);
+        listeners[data.uuid] = socket.listener;
     });
 
     socket.on('playlist.queue', function(data) {
