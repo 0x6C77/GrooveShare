@@ -138,7 +138,7 @@ io.on('connection', function(socket) {
         socket.uuid = data.uuid;
 
         // Register user
-        socket.listener = new listener(socket);
+        socket.listener = new Listener(socket);
     });
 
     socket.on('playlist.queue', function(data) {
