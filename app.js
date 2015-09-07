@@ -10,7 +10,8 @@ var fs = require('fs'),
 
 var Library = require('./lib/library.js'),
     TrackWatcher = require('./lib/trackWatcher.js'),
-    TrackManager = require('./lib/trackManager.js');
+    TrackManager = require('./lib/trackManager.js'),
+    Listener = require('./lib/listener.js');
 
 process.title = "Grooveshare"
 
@@ -135,6 +136,9 @@ io.on('connection', function(socket) {
 
     socket.on('register', function(data) {
         socket.uuid = data.uuid;
+
+        // Register user
+        socket.listener = new listener(socket);
     });
 
     socket.on('playlist.queue', function(data) {
@@ -147,6 +151,10 @@ io.on('connection', function(socket) {
 
     socket.on('track.rate', function(data) {
         library.rateTrack(data.id, socket.uuid, data.rating);
+    });
+
+    socket.on('lastfm.auth', function(data) {
+        socket.listener.authLastFM();
     });
 
     socket.on('disconnect', function () {

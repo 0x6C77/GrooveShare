@@ -235,6 +235,29 @@ $(function() {
     }
 
 
+
+    // ****************************
+    // LAST.FM
+    // ****************************  
+    $('.lastfm-scrobble').on('click', function() {
+        if ($(this).hasClass('lastfm-scrobble-active')) {
+            $(this).removeClass('lastfm-scrobble-active');
+            return;
+        }
+
+        // Start auth flow
+        socket.emit('lastfm.auth');
+    });
+
+    // Listen for events
+    socket.on('lastfm.authURL', function(url) {
+        console.log(url);
+        window.open(url, '_blank');
+    });
+
+
+
+
     // ****************************
     // PLAYLIST
     // ****************************    
