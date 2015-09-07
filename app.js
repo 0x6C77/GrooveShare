@@ -76,6 +76,12 @@ app.get('/add/:q', function (req, res) {
     res.send();
 });
 
+app.get('/lastfm', function (req, res) {
+    console.log(req.query.uuid, req.query.token);
+    // Close connection
+    res.send();
+});
+
 
 
 
@@ -97,6 +103,13 @@ trackWatcher.watch('queued', function(track) {
     io.sockets.emit('track.queued', track);
 });
 
+trackWatcher.watch('scrobble', function(track) {
+    // Loop listeners and try to scrobble
+    for (n = 0; n < listeners.length; n++) {
+        listeners[n].scrobbleSong(track.track, track.artist, Math.floor((new Date()).getTime() / 1000));
+    }
+});
+
 library.watch('added', function(trackID) {
     // Look up ID
     var track = library.lookupTrackID(trackID);
@@ -110,7 +123,8 @@ library.watch('rated', function(data) {
     trackWatcher.updateRatings(data);
 });
 
-var connections = 0;
+var connections = 0,
+    listeners = [];
 io.on('connection', function(socket) {
     connections++;
     console.log('New client [' + connections + ']');
@@ -139,6 +153,9 @@ io.on('connection', function(socket) {
 
         // Register user
         socket.listener = new Listener(socket);
+        if (!(socket.uuid in listeners)) {
+            listeners[socket.uuid] = socket.listener;
+        }
     });
 
     socket.on('playlist.queue', function(data) {
