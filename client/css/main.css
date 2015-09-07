@@ -52,21 +52,8 @@ input::-webkit-input-placeholder {
 
 
 /* PLAYLIST */
-.lastfm-scrobble {
-    font-size: 1.5em;
-    left: 10px;
-    position: absolute;
-    top: 90px;
-    cursor: pointer;
-    transition: 0.3s;
-}
-
-.lastfm-scrobble:hover {
-    color: white;
-}
-
 .lastfm-scrobble-active {
-    color: #2ca928;
+    color: #2ca928 !important;
 }
 
 body.showing-playlist .lastfm-scrobble {
@@ -108,7 +95,7 @@ body.showing-playlist .lastfm-scrobble {
 .sidebar-icons > span {
     float: left;
     margin-left: 50px;
-    width: 120px;
+    width: 150px;
     color: #444;
     margin-top: -25px;
     opacity: 0;
