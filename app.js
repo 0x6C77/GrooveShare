@@ -157,7 +157,8 @@ io.on('connection', function(socket) {
 
         // Register user
         if (!(socket.uuid in listeners)) {
-            listeners[socket.uuid] = new Listener(socket);
+            socket.listener = new Listener(socket);
+            listeners[socket.uuid] = socket.listener;
         }
     });
 
