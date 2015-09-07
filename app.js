@@ -116,7 +116,8 @@ library.watch('rated', function(data) {
     trackWatcher.updateRatings(data);
 });
 
-var connections = 0;
+var connections = 0,
+    listeners = [];
 io.on('connection', function(socket) {
     connections++;
     console.log('New client [' + connections + ']');
