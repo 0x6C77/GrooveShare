@@ -103,15 +103,6 @@ trackWatcher.watch('queued', function(track) {
     io.sockets.emit('track.queued', track);
 });
 
-trackWatcher.watch('scrobble', function(track) {
-    // Loop listeners and try to scrobble
-    for (var l in listeners) {
-        if (typeof listeners[l].scrobbleSong  === 'function') {
-            listeners[l].scrobbleSong(track.track, track.artist, Math.floor((new Date()).getTime() / 1000));
-        }
-    }
-});
-
 library.watch('added', function(trackID) {
     // Look up ID
     var track = library.lookupTrackID(trackID);
@@ -125,8 +116,7 @@ library.watch('rated', function(data) {
     trackWatcher.updateRatings(data);
 });
 
-var connections = 0,
-    listeners = [];
+var connections = 0;
 io.on('connection', function(socket) {
     connections++;
     console.log('New client [' + connections + ']');
@@ -153,13 +143,8 @@ io.on('connection', function(socket) {
     socket.on('register', function(data) {
         socket.uuid = data.uuid;
 
-        // Register user
-        if (!(socket.uuid in listeners)) {
-            socket.listener = new Listener(socket);
-            listeners[socket.uuid] = socket.listener;
-        } else {
-            socket.listener = listeners[socket.uuid];
-        }
+        // Create listener object
+        socket.listener = new Listener(socket);
     });
 
     socket.on('playlist.queue', function(data) {
@@ -176,6 +161,10 @@ io.on('connection', function(socket) {
 
     socket.on('lastfm.auth', function(data) {
         socket.listener.authLastFM();
+    });
+
+    socket.on('lastfm.scrobble', function() {
+        socket.listener.scrobbleSong(trackWatcher.playing.track, trackWatcher.playing.artist, Math.floor((new Date()).getTime() / 1000));
     });
 
     socket.on('disconnect', function () {

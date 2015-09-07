@@ -238,10 +238,12 @@ $(function() {
 
     // ****************************
     // LAST.FM
-    // ****************************  
+    // ****************************
+    var scrobbling = false;
     $('.lastfm-scrobble').on('click', function() {
         if ($(this).hasClass('lastfm-scrobble-active')) {
             $(this).removeClass('lastfm-scrobble-active');
+            scrobbling = false;
             return;
         }
 
@@ -254,6 +256,21 @@ $(function() {
         console.log(url);
         window.open(url, '_blank');
     });
+
+    socket.on('lastfm.authorised', function(url) {
+        console.log('All clear to scrobble');
+        scrobbling = true;
+        $('.lastfm-scrobble').addClass('lastfm-scrobble-active');
+    });
+
+    function scrobbleSong() {
+        if (scrobbling) {
+            console.log('scrobble song');
+            socket.emit('lastfm.auth');
+        } else {
+            console.log('don\'t scrobble song');
+        }
+    }
 
 
 
@@ -354,12 +371,6 @@ $(function() {
 
 
     // ****************************
-    // LAST.FM
-    // ****************************
-
-
-
-    // ****************************
     // CONTROLS
     // ****************************    
     $('#controls .control').on('click', function(e) {
@@ -442,6 +453,11 @@ $(function() {
         this.$player.on('timeupdate', function() {
             var width = self.player.currentTime / self.player.duration * 100;
             self.$progress.width(width + '%');
+
+            if (width > 50 && !self.halfWay) {
+                self.halfWay = true;
+                scrobbleSong();
+            }
         });
 
         this.$player.on('canplay', function() {
