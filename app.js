@@ -106,9 +106,7 @@ trackWatcher.watch('queued', function(track) {
 trackWatcher.watch('scrobble', function(track) {
     // Loop listeners and try to scrobble
     for (var l in listeners) {
-        console.log(listeners[l]);
         if (typeof listeners[l].scrobbleSong  === 'function') {
-            console.log('Calling function');
             listeners[l].scrobbleSong(track.track, track.artist, Math.floor((new Date()).getTime() / 1000));
         }
     }
