@@ -105,6 +105,7 @@ trackWatcher.watch('queued', function(track) {
 
 trackWatcher.watch('scrobble', function(track) {
     // console.log(listeners);
+    console.log(listeners)
     // Loop listeners and try to scrobble
     for (var l in listeners) {
         if (l.hasOwnProperty('scrobbleSong')) {
@@ -155,9 +156,8 @@ io.on('connection', function(socket) {
         socket.uuid = data.uuid;
 
         // Register user
-        socket.listener = new Listener(socket);
         if (!(socket.uuid in listeners)) {
-            listeners[socket.uuid] = socket.listener;
+            listeners[socket.uuid] = new Listener(socket);
         }
     });
 
