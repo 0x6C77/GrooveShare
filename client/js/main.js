@@ -266,7 +266,7 @@ $(function() {
     function scrobbleSong() {
         if (scrobbling) {
             console.log('scrobble song');
-            socket.emit('lastfm.auth');
+            socket.emit('lastfm.scrobble');
         } else {
             console.log('don\'t scrobble song');
         }
