@@ -174,7 +174,7 @@ io.on('connection', function(socket) {
     });
 
     socket.on('lastfm.auth', function(data) {
-        socket.listener.authLastFM();
+        listeners[socket.uuid].authLastFM();
     });
 
     socket.on('disconnect', function () {
