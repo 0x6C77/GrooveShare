@@ -159,6 +159,8 @@ io.on('connection', function(socket) {
         if (!(socket.uuid in listeners)) {
             socket.listener = new Listener(socket);
             listeners[socket.uuid] = socket.listener;
+        } else {
+            socket.listener = listeners[socket.uuid];
         }
     });
 
