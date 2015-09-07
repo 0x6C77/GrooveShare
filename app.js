@@ -104,7 +104,7 @@ trackWatcher.watch('queued', function(track) {
 });
 
 trackWatcher.watch('scrobble', function(track) {
-    console.log(listeners);
+    // console.log(listeners);
     // Loop listeners and try to scrobble
     for (var l in listeners) {
         if (l.hasOwnProperty('scrobbleSong')) {
