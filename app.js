@@ -77,9 +77,9 @@ app.get('/add/:q', function (req, res) {
 });
 
 app.get('/lastfm', function (req, res) {
-    console.log(req.query.uuid, req.query.token);
-    // Close connection
-    res.send();
+    console.log(req.query.listener, req.query.token);
+    listeners[req.query.listener].authLastFM(req.query.token);
+    res.send('<script>window.close();</script>');
 });
 
 
