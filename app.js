@@ -107,7 +107,8 @@ trackWatcher.watch('scrobble', function(track) {
     console.log(listeners);
     // Loop listeners and try to scrobble
     for (var l in listeners) {
-        l.scrobbleSong(track.track, track.artist, Math.floor((new Date()).getTime() / 1000));
+        console.log(l);
+        // l.scrobbleSong(track.track, track.artist, Math.floor((new Date()).getTime() / 1000));
     }
 });
 
