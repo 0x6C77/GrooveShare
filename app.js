@@ -6,14 +6,15 @@ var fs = require('fs'),
     hbs = require('hbs'),
     socketIO = require('socket.io'),
     colors = require('colors'),
-    config = require('config');
+    config = require('config'),
+    sqlite3 = require('sqlite3').verbose();
 
 var Library = require('./lib/library.js'),
     TrackWatcher = require('./lib/trackWatcher.js'),
     TrackManager = require('./lib/trackManager.js'),
     Listener = require('./lib/listener.js');
 
-process.title = "Grooveshare"
+process.title = "Grooveshare";
 
 // Check config file - Only checks for the existant of the entry, not the value.
 if(!config.has('LastFM.key') || !config.has('LastFM.secret') || !config.has('YouTube.key') || !config.has('Service.port') || !config.has('Service.interface')){
@@ -33,9 +34,47 @@ if (!fs.existsSync(path.resolve(__dirname, 'data/images'))) {
 }
 
 
+// Check DB is initiated
+var db = new sqlite3.Database('tracks.db');
+global.db = db;
+
+db.run("CREATE TABLE IF NOT EXISTS listeners (\
+        uuid TEXT NOT NULL,\
+        username TEXT,\
+        email TEXT,\
+        lastfm_username TEXT,\
+        lastfm_session TEXT,\
+        added DATETIME DEFAULT CURRENT_TIMESTAMP,\
+        last_seen DATETIME DEFAULT CURRENT_TIMESTAMP,\
+        PRIMARY KEY (uuid)\
+     )");
+
+db.run("CREATE TABLE IF NOT EXISTS tracks_ratings (\
+        uuid TEXT NOT NULL,\
+        track TEXT NOT NULL,\
+        rating INT,\
+        added DATETIME DEFAULT CURRENT_TIMESTAMP,\
+        PRIMARY KEY (uuid, track)\
+     )");
+
+db.run("CREATE TABLE IF NOT EXISTS tracks (\
+        id TEXT PRIMARY KEY NOT NULL,\
+        track TEXT NOT NULL,\
+        artist TEXT NOT NULL,\
+        image TEXT,\
+        user_id INT,\
+        added DATETIME DEFAULT CURRENT_TIMESTAMP,\
+        last DATETIME,\
+        plays INT,\
+        youtube TEXT NOT NULL\
+     );");
+
+
+
+
 trackWatcher = new TrackWatcher();
 trackManager = new TrackManager();
-global.library = library = new Library(function() {
+global.library = library = new Library(db, function() {
     console.log('%s %d tracks', 'Library loaded:'.green, this.countTracks()); trackWatcher.setup(this)
 });
 
@@ -120,7 +159,6 @@ var connections = 0,
     listeners = [];
 io.on('connection', function(socket) {
     connections++;
-    console.log('New client [' + connections + ']');
 
     // Get queue
     var q = trackWatcher.queue,
@@ -133,19 +171,12 @@ io.on('connection', function(socket) {
 
     socket.emit('playlist.play', { track: trackWatcher.playing, position: trackWatcher.getPosition(), queue: queue });
 
-    // lyrics.fetch(tracker.track.artist, tracker.track.track, function (err, lyrics) {
-    //     if (!err && lyrics) {
-    //         socket.emit('song.lyrics', lyrics);
-    //     } else {
-    //         socket.emit('song.lyrics', 'No lyrics available');
-    //     }
-    // });
 
     socket.on('register', function(data) {
         socket.uuid = data.uuid;
 
         // Create listener object
-        socket.listener = new Listener(socket);
+        socket.listener = new Listener(db, socket);
         listeners[data.uuid] = socket.listener;
     });
 
@@ -171,6 +202,5 @@ io.on('connection', function(socket) {
 
     socket.on('disconnect', function () {
         connections--;
-        console.log('Lost client [' + connections + ']');
     });
 });
