@@ -10,9 +10,9 @@ var fs = require('fs'),
     sqlite3 = require('sqlite3').verbose();
 
 var Library = require('./lib/library.js'),
-    TrackWatcher = require('./lib/trackWatcher.js'),
     TrackManager = require('./lib/trackManager.js'),
-    Listener = require('./lib/listener.js');
+    Listener = require('./lib/listener.js'),
+    channels = [];
 
 process.title = "Grooveshare";
 
@@ -49,9 +49,27 @@ db.run("CREATE TABLE IF NOT EXISTS listeners (\
         PRIMARY KEY (uuid)\
      )");
 
+db.run("CREATE TABLE IF NOT EXISTS channels (\
+        channel_id INT PRIMARY KEY AUTOINCREMENT,\
+        channel TEXT NOT NULL,\
+        created DATETIME DEFAULT CURRENT_TIMESTAMP,\
+        PRIMARY KEY (uuid, track)\
+     )");
+
+db.run("CREATE TABLE IF NOT EXISTS channels_tracks (\
+        channel_id INT PRIMARY,\
+        track_id INT PRIMARY,\
+        uuid INT,\
+        last DATETIME,\
+        plays INT,\
+        added DATETIME DEFAULT CURRENT_TIMESTAMP,\
+        PRIMARY KEY (uuid, track)\
+     )");
+
 db.run("CREATE TABLE IF NOT EXISTS tracks_ratings (\
         uuid TEXT NOT NULL,\
         track TEXT NOT NULL,\
+        channel INT,\
         rating INT,\
         added DATETIME DEFAULT CURRENT_TIMESTAMP,\
         PRIMARY KEY (uuid, track)\
@@ -62,25 +80,24 @@ db.run("CREATE TABLE IF NOT EXISTS tracks (\
         track TEXT NOT NULL,\
         artist TEXT NOT NULL,\
         image TEXT,\
-        user_id INT,\
-        added DATETIME DEFAULT CURRENT_TIMESTAMP,\
+        uuid INT,\
         last DATETIME,\
         plays INT,\
+        added DATETIME DEFAULT CURRENT_TIMESTAMP,\
         youtube TEXT NOT NULL\
      );");
 
 
-
-
-trackWatcher = new TrackWatcher();
 trackManager = new TrackManager();
 global.library = library = new Library(db, function() {
-    console.log('%s %d tracks', 'Library loaded:'.green, this.countTracks()); trackWatcher.setup(this)
+    console.log('%s %d tracks', 'Library loaded:'.green, this.countTracks());
+    // trackWatcher.setup(this);
 });
 
 library.watch('added', function(trackID) {
-    trackWatcher.queueSong(trackID);
+    // trackWatcher.queueSong(trackID);
 });
+
 
 // Express setup
 var server = app.listen(config.get('Service.port'), config.get('Service.interface'), function () {
@@ -122,25 +139,9 @@ app.get('/lastfm', function (req, res) {
 });
 
 
-
-
 // SOCKET.IO setup
 var io = socketIO.listen(server);
 
-// Watch TrackWatcher and emit changes
-trackWatcher.watch('play', function(track) {
-    io.sockets.emit('playlist.play', { track: track });
-    // Update library
-    library.playingTrack(track.id);
-});
-
-trackWatcher.watch('preload', function(track) {
-    io.sockets.emit('playlist.preload', track);
-});
-
-trackWatcher.watch('queued', function(track) {
-    io.sockets.emit('track.queued', track);
-});
 
 library.watch('added', function(trackID) {
     // Look up ID
@@ -160,18 +161,6 @@ var connections = 0,
 io.on('connection', function(socket) {
     connections++;
 
-    // Get queue
-    var q = trackWatcher.queue,
-        queueLength = q.length,
-        queue = [];
-
-    for (n = 0; n < queueLength; n++) {
-        queue[n] = library.lookupTrackID(q[n]);
-    }
-
-    socket.emit('playlist.play', { track: trackWatcher.playing, position: trackWatcher.getPosition(), queue: queue });
-
-
     socket.on('register', function(data) {
         socket.uuid = data.uuid;
 
@@ -179,6 +168,33 @@ io.on('connection', function(socket) {
         socket.listener = new Listener(db, socket);
         listeners[data.uuid] = socket.listener;
     });
+
+
+    socket.on('channel.join', function(channel) {
+        console.log(socket.rooms);
+
+        // Is this channel setup?
+        if (!(req.params.channel in channels)) {
+            // Create channel
+            var channel = new Channel(req.params.channel, library, io)
+            channels[req.params.channel] = channel;
+        }
+
+        // Join channel
+        socket.join('#' + req.params.channel);
+
+        // Get queue
+        var q = channel.trackWatcher.queue,
+            queueLength = q.length,
+            queue = [];
+
+        for (n = 0; n < queueLength; n++) {
+            queue[n] = library.lookupTrackID(q[n]);
+        }
+
+        socket.emit('playlist.play', { track: channel.trackWatcher.playing, position: channel.trackWatcher.getPosition(), queue: queue });
+    });
+
 
     socket.on('playlist.queue', function(data) {
         trackWatcher.queueSong(data.id);
