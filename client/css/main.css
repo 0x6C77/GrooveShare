@@ -68,6 +68,7 @@ body.showing-playlist .lastfm-scrobble {
     bottom: 0;
     padding-right: 50px;
     transition: 0.3s;
+    z-index: 100;
 }
 
 .showing-sidebar #sidebar {
