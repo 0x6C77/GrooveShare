@@ -16,7 +16,7 @@ body {
     overflow-x: hidden;
 }
 
-body.player {
+body {
     /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#282828+0,0e0e0e+99 */
     background: rgb(40,40,40); /* Old browsers */
     background: -moz-radial-gradient(center, ellipse cover, rgba(40,40,40,1) 0%, rgba(14,14,14,1) 99%); /* FF3.6+ */
@@ -51,6 +51,114 @@ input::-webkit-input-placeholder {
 }
 
 
+#container,
+#player {
+    height: 100%;
+}
+
+
+
+
+
+/*****************************************************************************
+ *   
+ *   HOMEPAGE
+ *
+ *****************************************************************************/
+
+/* CHANNEL LIST */
+.channels {
+    width: 60%;
+    padding-top: 10%;
+    opacity: 0;
+    transition: 0.3s;
+}
+
+.channels.active {
+    opacity: 1;
+}
+
+.channels .channel {
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+    opacity: 1;
+    transition: opacity 0.3s, top 0.3s, left 0.3s;
+}
+
+.channels .channel--remove {
+    opacity: 0;
+}
+
+.channels .channel a {
+    text-decoration: none;
+    background: #151515;
+    display: block;
+}
+
+.channels .channel--active a,
+.channels .channel a:hover {
+    background: #173d63;
+}
+
+.channels .channel .channel-image {
+    width: 100%;
+    height: 150px;
+    background-size: cover;
+    background-position: center;
+    position: relative;
+}
+
+.channels .channel--add-new .channel-image::after {
+    color: #202020;
+    content: "";
+    font-family: FontAwesome;
+    font-size: 100px;
+    left: 0;
+    line-height: 150px;
+    position: absolute;
+    text-align: center;
+    top: 0;
+    width: 100%;
+}
+
+.channels .channel--add-new a:hover .channel-image::after {
+    color: #FFFFFF;
+}
+
+.channels .channel h3 {
+    padding: 8px;
+    color: #555555;
+    font-family: "Roboto",sans-serif;
+    line-height: 1.2em;
+}
+
+.channels .channel--active h3,
+.channels .channel a:hover h3 {
+    color: #FFFFFF;
+}
+
+
+@media screen and (max-width: 1200px) {
+    .channels {
+        width: 90%;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .channels .channel {
+        margin-bottom: 25px;
+    }
+}
+
+
+
+
+/*****************************************************************************
+ *   
+ *   PLAYER
+ *
+ *****************************************************************************/
+
+
 /* PLAYLIST */
 .lastfm-scrobble-active {
     color: #D01F3C !important;
@@ -62,7 +170,7 @@ body.showing-playlist .lastfm-scrobble {
 
 /* SIDEBAR */
 #sidebar {
-    left: -390px;
+    left: -900px;
     position: absolute;
     top: 0;
     bottom: 0;
@@ -71,7 +179,11 @@ body.showing-playlist .lastfm-scrobble {
     z-index: 100;
 }
 
-.showing-sidebar #sidebar {
+#player.active #sidebar {
+    left: -390px;
+}
+
+.showing-sidebar #player.active #sidebar {
     left: 0;
 }
 
@@ -121,9 +233,14 @@ body.showing-playlist .lastfm-scrobble {
     height: 100%;
 }
 
+#sidebar {
+    z-index: 100;
+}
 
 #sidebar h1 {
     margin-top: 5px;
+    margin-bottom: 0.5em;
+    font-size: 31px;
 }
 
 
@@ -240,6 +357,78 @@ body.showing-playlist .lastfm-scrobble {
 }
 
 
+#player .channel-info {
+    background: #151515;
+    position: relative;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+    width: 350px;
+    margin-top: 20px;
+    margin-bottom: 5px;
+}
+
+#player .channel-quit {
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 40px;
+    color: #555555;
+    background: #222222;
+    padding-right: 4px;
+    cursor: pointer;
+}
+
+#player .channel-quit:hover {
+    background: #173D63;
+}
+
+#player .channel-quit i {
+    font-size: 25px;
+    line-height: 50px;
+    padding-top: 0;
+    transition: 0;
+}
+
+#player .channel-quit:hover i {
+    color: #FFFFFF;
+}
+
+#player .channel-image {
+    background-position: center center;
+    background-size: cover;
+    height: 100%;
+    left: 40px;
+    position: absolute;
+    top: 0;
+    width: 60px;
+}
+
+#player .channel-info-details {
+    color: #555555;
+    font-size: 0.8em;
+    padding: 8px 15px;
+    margin-left: 100px;
+    cursor: pointer;
+}
+
+#player .channel-info-details:hover {
+    background: #173D63;
+    color: #999;
+}
+
+#player .channel-info h3 {
+    color: #286aab;
+    font-size: 1.5em;
+    padding-bottom: 2px;
+}
+
+#player .channel-info-details:hover h3 {
+    color: white;
+}
+
+
+
+
 #search {
     position: absolute;
     top: 10px;
@@ -339,31 +528,46 @@ body.showing-playlist .lastfm-scrobble {
     text-shadow: 0 0 4px #1d4c7c;
 }
 
-#container {
-    display: none;
+
+.track-container {
+    opacity: 0;
     position: relative;
     top: 50%;
     margin-top: -260px;
     text-align: center;
-    transition: 0.3s;
+    transition: opacity 0.5s, left 0.3s;
     left: 0;
 }
 
-.showing-sidebar #container {
+#player.active .track-container {
+    opacity: 1;
+}
+
+.showing-sidebar .track-container  {
     left: 200px;
 }
 
-#details h1,
-#details h3 {
-    margin: 0;
-    padding: 0;
+.track-details {
+    text-align: center;
 }
 
-#details h3 {
+.track-details h1,
+.track-details h3 {
+    margin: 0;
+    padding: 0;
+    text-align: center;
+}
+
+.track-details h1 {
+    font-size: 32px
+}
+
+.track-details h3 {
+    font-size: 1.17em;
     font-weight: 300;
 }
 
-#details .album-art {
+.track-details .album-art {
     margin-bottom: 8px;
     position: relative;
     display: inline-block;
@@ -371,14 +575,14 @@ body.showing-playlist .lastfm-scrobble {
     transition:; 0.5s;
 }
 
-#details .album-art img {
+.track-details .album-art img {
     width: 300px;
     height: 300px;
     float: left;
     background: #151515;
 }
 
-#details .album-art img::after {
+.track-details .album-art img::after {
     content: "";
     font-family: FontAwesome;
     font-size: 100px;
@@ -391,7 +595,7 @@ body.showing-playlist .lastfm-scrobble {
     left: 0;
 }
 
-#details .album-art .progress {
+.track-details .album-art .progress {
     position: absolute;
     bottom: 0;
     left: 0;
@@ -400,13 +604,17 @@ body.showing-playlist .lastfm-scrobble {
     width: 0;
 }
 
-#details h3 {
+.track-details h3 {
     margin-top: 4px;
     color: #555555;
 }
 
 
-#controls .control {
+.track-controls {
+    text-align: center;
+}
+
+.track-controls .control {
     position: relative;
     display: inline-block;
     margin: 1em;
@@ -421,19 +629,19 @@ body.showing-playlist .lastfm-scrobble {
     color: #173d63;
 }
 
-#controls .control:hover {
+.track-controls .control:hover {
     color: #286aab;
 }
 
-#controls .control-active {
+.track-controls .control-active {
     color: white !important;
 }
 
-#controls .control-deactive {
+.track-controls .control-deactive {
     color: #444;
 }
 
-#controls .control .count {
+.track-controls .control .count {
     position: absolute;
     top: 0px;
     left: 26px;
@@ -445,14 +653,15 @@ body.showing-playlist .lastfm-scrobble {
     color: white;
     font-size: 11px;
     text-align: center;
+    display: none;
 }
 
-#controls .control--like .count {
+.track-controls .control--like .count {
     left: auto;
     right: 26px;
 }
 
-#controls .control::before {
+.track-controls .control::before {
     position: absolute;
     top: 50%;
     left: -20px;
@@ -477,3 +686,78 @@ body.showing-playlist .lastfm-scrobble {
     }
 }
 
+
+
+
+
+
+
+
+
+
+
+/*****************************************************************************
+ *   
+ *   MISC
+ *
+ *****************************************************************************/
+
+.loader:before,
+.loader:after,
+.loader {
+    position: absolute;
+    top: 32px;
+    left: 50%;
+    margin-left: -1.25em;
+    border-radius: 50%;
+    width: 2.5em;
+    height: 2.5em;
+    -webkit-animation-fill-mode: both;
+    animation-fill-mode: both;
+    -webkit-animation: load7 1.8s infinite ease-in-out;
+    animation: load7 1.8s infinite ease-in-out;
+}
+.loader {
+  font-size: 10px;
+  position: relative;
+  text-indent: -9999em;
+  -webkit-transform: translateZ(0);
+  -ms-transform: translateZ(0);
+  transform: translateZ(0);
+  -webkit-animation-delay: -0.16s;
+  animation-delay: -0.16s;
+}
+.loader:before {
+  left: -3.5em;
+  -webkit-animation-delay: -0.32s;
+  animation-delay: -0.32s;
+}
+.loader:after {
+  left: 5.75em;
+}
+.loader:before,
+.loader:after {
+  content: '';
+  position: absolute;
+  top: 0px;
+}
+@-webkit-keyframes load7 {
+  0%,
+  80%,
+  100% {
+    box-shadow: 0 2.5em 0 -1.3em #286aab;
+  }
+  40% {
+    box-shadow: 0 2.5em 0 0 #286aab;
+  }
+}
+@keyframes load7 {
+  0%,
+  80%,
+  100% {
+    box-shadow: 0 2.5em 0 -1.3em #286aab;
+  }
+  40% {
+    box-shadow: 0 2.5em 0 0 #286aab;
+  }
+}

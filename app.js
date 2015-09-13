@@ -10,9 +10,10 @@ var fs = require('fs'),
     sqlite3 = require('sqlite3').verbose();
 
 var Library = require('./lib/library.js'),
-    TrackWatcher = require('./lib/trackWatcher.js'),
     TrackManager = require('./lib/trackManager.js'),
-    Listener = require('./lib/listener.js');
+    Listener = require('./lib/listener.js'),
+    Channel = require('./lib/channel.js'),
+    channels = {};
 
 process.title = "Grooveshare";
 
@@ -33,10 +34,9 @@ if (!fs.existsSync(path.resolve(__dirname, 'data/images'))) {
     fs.mkdirSync(path.resolve(__dirname, 'data/images'));
 }
 
-
 // Check DB is initiated
 var db = new sqlite3.Database('tracks.db');
-global.db = db;
+// global.db = db;
 
 db.run("CREATE TABLE IF NOT EXISTS listeners (\
         uuid TEXT NOT NULL,\
@@ -49,9 +49,28 @@ db.run("CREATE TABLE IF NOT EXISTS listeners (\
         PRIMARY KEY (uuid)\
      )");
 
+db.run("CREATE TABLE IF NOT EXISTS channels (\
+        channel_id INTEGER PRIMARY KEY AUTOINCREMENT,\
+        channel TEXT NOT NULL,\
+        image TEXT,\
+        owner INT,\
+        created DATETIME DEFAULT CURRENT_TIMESTAMP\
+     )");
+
+db.run("CREATE TABLE IF NOT EXISTS channels_tracks (\
+        channel_id INT,\
+        track_id INT,\
+        uuid INT,\
+        last DATETIME,\
+        plays INT,\
+        added DATETIME DEFAULT CURRENT_TIMESTAMP,\
+        PRIMARY KEY (channel_id, track_id)\
+     )");
+
 db.run("CREATE TABLE IF NOT EXISTS tracks_ratings (\
         uuid TEXT NOT NULL,\
         track TEXT NOT NULL,\
+        channel INT,\
         rating INT,\
         added DATETIME DEFAULT CURRENT_TIMESTAMP,\
         PRIMARY KEY (uuid, track)\
@@ -62,24 +81,25 @@ db.run("CREATE TABLE IF NOT EXISTS tracks (\
         track TEXT NOT NULL,\
         artist TEXT NOT NULL,\
         image TEXT,\
-        user_id INT,\
-        added DATETIME DEFAULT CURRENT_TIMESTAMP,\
+        uuid INT,\
         last DATETIME,\
         plays INT,\
+        added DATETIME DEFAULT CURRENT_TIMESTAMP,\
         youtube TEXT NOT NULL\
      );");
 
 
+// Add starting channels
+// var stmt = db.prepare("INSERT INTO channels (`channel`, `image`) VALUES (?, ?)");
+// stmt.run('Random spamdom', 'Hsakdfuhwiue4ryh59834.jpg');
+// stmt.run('Friday playlist', 'ASDbksdjifhbgi9o324b4.jpg');
+// stmt.run('Metal Mayhem', 'KSdfbkauie4th9834nhuin.jpg');
 
 
-trackWatcher = new TrackWatcher();
-trackManager = new TrackManager();
+
+global.trackManager = trackManager = new TrackManager();
 global.library = library = new Library(db, function() {
-    console.log('%s %d tracks', 'Library loaded:'.green, this.countTracks()); trackWatcher.setup(this)
-});
-
-library.watch('added', function(trackID) {
-    trackWatcher.queueSong(trackID);
+    console.log('%s %d tracks', 'Library loaded:'.green, this.countTracks());
 });
 
 // Express setup
@@ -95,24 +115,13 @@ app.set('view engine', 'hbs');
 app.use('/css', express.static(__dirname + '/client/css'));
 app.use('/js', express.static(__dirname + '/client/js'));
 app.use('/fonts', express.static(__dirname + '/client/fonts'));
+app.use('/images', express.static(__dirname + '/client/images'));
 
 app.use('/music', express.static(__dirname + '/data/music'));
-app.use('/images', express.static(__dirname + '/data/images'));
+app.use('/music/images', express.static(__dirname + '/data/images'));
 
 app.get('/', function (req, res) {
     res.render('index', { });
-});
-
-app.get('/search/:q', function (req, res) {    
-    trackManager.findSong(req.params.q, function(response) {
-        res.send(response);
-    });
-});
-
-app.get('/add/:q', function (req, res) {
-    trackManager.addSong(req.params.q);
-    // Close connection
-    res.send();
 });
 
 app.get('/lastfm', function (req, res) {
@@ -122,55 +131,21 @@ app.get('/lastfm', function (req, res) {
 });
 
 
-
-
 // SOCKET.IO setup
 var io = socketIO.listen(server);
 
-// Watch TrackWatcher and emit changes
-trackWatcher.watch('play', function(track) {
-    io.sockets.emit('playlist.play', { track: track });
-    // Update library
-    library.playingTrack(track.id);
-});
 
-trackWatcher.watch('preload', function(track) {
-    io.sockets.emit('playlist.preload', track);
-});
+// library.watch('rated', function(data) {
+//     io.sockets.emit('track.rated', data);
 
-trackWatcher.watch('queued', function(track) {
-    io.sockets.emit('track.queued', track);
-});
-
-library.watch('added', function(trackID) {
-    // Look up ID
-    var track = library.lookupTrackID(trackID);
-    io.sockets.emit('track.added', track);
-});
-
-library.watch('rated', function(data) {
-    io.sockets.emit('track.rated', data);
-
-    // Update trackWatcher
-    trackWatcher.updateRatings(data);
-});
+//     // Update trackWatcher
+//     trackWatcher.updateRatings(data);
+// });
 
 var connections = 0,
     listeners = [];
 io.on('connection', function(socket) {
     connections++;
-
-    // Get queue
-    var q = trackWatcher.queue,
-        queueLength = q.length,
-        queue = [];
-
-    for (n = 0; n < queueLength; n++) {
-        queue[n] = library.lookupTrackID(q[n]);
-    }
-
-    socket.emit('playlist.play', { track: trackWatcher.playing, position: trackWatcher.getPosition(), queue: queue });
-
 
     socket.on('register', function(data) {
         socket.uuid = data.uuid;
@@ -178,18 +153,63 @@ io.on('connection', function(socket) {
         // Create listener object
         socket.listener = new Listener(db, socket);
         listeners[data.uuid] = socket.listener;
+
+        // Get channels list
+        db.all("SELECT * FROM channels ORDER BY channel_id", function(err, rows) {
+            if (err) {
+                console.log('Error loading channels'.red);
+                return;
+            }
+
+            socket.emit('channels.list', rows);
+        });
+    });
+
+
+    socket.on('channel.join', function(channel_id) {
+        // Is this channel setup?
+        if (!(channel_id in channels)) {
+            // Create channel
+            var channel = new Channel(channel_id, db, library, io, function() {
+                channels[channel_id] = channel;
+                joinedChannel(channel_id, socket);
+            });
+        } else {
+            joinedChannel(channel_id, socket);
+        }
+    });
+
+    socket.on('channel.leave', function() {
+        var channel = channels[socket.channel];
+
+        socket.leave('#' + socket.channel);
+        socket.broadcast.to('#' + socket.channel).emit('channel.details', { listeners: channel.getListeners() });
+
+        socket.channel = null;
+    });
+
+    socket.on('playlist.add', function(data) {
+        channels[socket.channel].addSong(data.id);
     });
 
     socket.on('playlist.queue', function(data) {
-        trackWatcher.queueSong(data.id);
+        channels[socket.channel].trackWatcher.queueSong(data.id);
     });
 
     socket.on('tracklist.list', function(data) {
-        socket.emit('tracklist.list', library.tracks);
+        channels[socket.channel].getTracks(function(tracks) {
+            socket.emit('tracklist.list', tracks);
+        });
     });
 
     socket.on('track.rate', function(data) {
         library.rateTrack(data.id, socket.uuid, data.rating);
+    });
+
+    socket.on('track.search', function(data) {
+        trackManager.findSong(data.q, function(response) {
+            socket.emit('track.search', response);
+        });
     });
 
     socket.on('lastfm.auth', function(data) {
@@ -200,7 +220,39 @@ io.on('connection', function(socket) {
         socket.listener.scrobbleSong(trackWatcher.playing.track, trackWatcher.playing.artist, Math.floor((new Date()).getTime() / 1000));
     });
 
+    socket.onclose = function(reason) {
+        if (socket.channel) {
+            var channel = channels[socket.channel];
+            socket.leave('#' + socket.channel);
+            socket.broadcast.to('#' + socket.channel).emit('channel.details', { listeners: channel.getListeners() });
+        }
+        Object.getPrototypeOf(this).onclose.call(this,reason);
+    }
+
     socket.on('disconnect', function () {
         connections--;
     });
 });
+
+
+function joinedChannel(channel_id, socket) {
+    // Join channel
+    socket.join('#' + channel_id);
+    socket.channel = channel_id;
+
+    var channel = channels[channel_id];
+
+    // Tell everyone we have a new user
+    socket.broadcast.to('#' + channel_id).emit('channel.details', { listeners: channel.getListeners() });
+
+    // Get queue
+    var q = channel.trackWatcher.queue,
+        queueLength = q.length,
+        queue = [];
+
+    for (n = 0; n < queueLength; n++) {
+        queue[n] = library.lookupTrackID(q[n]);
+    }
+
+    socket.emit('channel.joined', { channel: channel.getDetails(), track: channel.trackWatcher.playing, position: channel.trackWatcher.getPosition(), queue: queue });
+}
