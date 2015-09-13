@@ -560,7 +560,6 @@ $(function() {
 
 
     function renderSearchResults(data) {
-        console.log(data);
         var $results = tmplSearchResults(data);
         $('#search').append($results).show();
     }
