@@ -308,6 +308,8 @@ $(function() {
         // Sidebar
         $('.channel-quit').on('click', function(e) {
             default_channel = null;
+            queue = [];
+            tracklist = [];
             localStorage.removeItem('channel');
             renderChannelList(channels);
             socket.emit('channel.leave');
