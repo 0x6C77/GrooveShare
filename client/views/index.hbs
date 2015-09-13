@@ -7,56 +7,26 @@
 
         <title>Grooveshare</title>
 
+        <link rel="stylesheet" href="css/reset.css">
+        <link rel="stylesheet" href="css/responsive.gs.24col.css">
+
         <link href='http://fonts.googleapis.com/css?family=Roboto:400,500,300' rel='stylesheet' type='text/css'>
         <link href='http://fonts.googleapis.com/css?family=Raleway:400,500,300' rel='stylesheet' type='text/css'>
         <link rel="stylesheet" href="css/fonts.css">
+        
         <link rel="stylesheet" href="css/toastr.min.css">
         <link rel="stylesheet" href="css/main.css">
 
+        <script src="js/respond.min.js"></script>
         <script src="js/jquery.min.js"></script>
         <script src='/socket.io/socket.io.js'></script>
     </head>
 
-    <body class="player">
-        <audio></audio>
-
-        <div id="sidebar">
-            <div class="sidebar-content">
-                <div class='tracklist-search'>
-                    <input type="text" placeholder="Search" autocomplete="off"/>
-                    <i class='fa fa-search'></i>
-                </div>
-            </div>
-            <div class='sidebar-icons'>
-                <i class='fa fa-bars show-sidebar'></i>
-                <span>Show sidebar</span>
-                <i class='fa fa-volume-off toggle-mute'></i>
-                <span>Toggle mute</span>
-                <i class='fa fa-lastfm-square lastfm-scrobble'></i>
-                <span>Enable scrobbling</span>
-            </div>
-        </div>
-
-        <div id="search">
-            <div class='search-container'>
-                <input type="text" placeholder="Search" autocomplete="off"/>
-                <i class='fa fa-search'></i>
-            </div>
-        </div>  
-
+    <body>
+        
         <div id="container">
-            <div id="details">
-                <div class='album-art'>
-                    <img src='' alt=''/>
-                    <div class='progress'></div>
-                </div>
-                <h1 class='track'></h1>
-                <h3 class='artist'></h3>
-            </div>
-            <div id="controls">
-                <span class='control control--like'><i class='fa fa-thumbs-up'></i><span class='count'>0</span></span>
-                <span class='control control--dislike'><i class='fa fa-thumbs-down'></i><span class='count'>0</span></span>
-            </div>
+
+
         </div>
 
         <script src='/js/handlebars-v3.0.3.js'></script>
