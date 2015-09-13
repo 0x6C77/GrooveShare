@@ -217,7 +217,10 @@ io.on('connection', function(socket) {
     });
 
     socket.on('lastfm.scrobble', function() {
-        socket.listener.scrobbleSong(trackWatcher.playing.track, trackWatcher.playing.artist, Math.floor((new Date()).getTime() / 1000));
+        if (socket.channel) {
+            var channel = channels[socket.channel];
+            socket.listener.scrobbleSong(channel.trackWatcher.playing.track, channel.trackWatcher.playing.artist, Math.floor((new Date()).getTime() / 1000));
+        }
     });
 
     socket.onclose = function(reason) {
