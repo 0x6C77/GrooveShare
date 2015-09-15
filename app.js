@@ -205,7 +205,7 @@ io.on('connection', function(socket) {
     });
 
     socket.on('track.search', function(data) {
-        trackManager.findSong(data.q, function(response) {
+        trackManager.findSong(data.q, socket.channel, function(response) {
             socket.emit('track.search', response);
         });
     });
