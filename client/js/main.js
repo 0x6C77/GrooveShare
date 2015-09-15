@@ -169,7 +169,7 @@ $(function() {
                                             </div>\
                                             <i class="fa fa-volume-off toggle-mute"></i>\
                                             <span>Toggle mute</span>\
-                                            <i class="fa fa-lastfm-square lastfm-scrobble"></i>\
+                                            <i class="fa fa-lastfm-square lastfm-scrobble {{#if scrobbling}}lastfm-scrobble-active{{/if}}"></i>\
                                             <span>Enable scrobbling</span>\
                                         </div>\
                                     </div>\
@@ -255,6 +255,8 @@ $(function() {
         $('body').removeClass('showing-sidebar');
 
         channel_id = data.channel.channel_id;
+
+        data.scrobbling = scrobbling;
 
         // Build UI in background
         $container.append(tmplPlayerContainer(data));
