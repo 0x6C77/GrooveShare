@@ -134,16 +134,9 @@ app.get('/lastfm', function (req, res) {
 // SOCKET.IO setup
 var io = socketIO.listen(server);
 
-
-// library.watch('rated', function(data) {
-//     io.sockets.emit('track.rated', data);
-
-//     // Update trackWatcher
-//     trackWatcher.updateRatings(data);
-// });
-
 var connections = 0,
     listeners = [];
+
 io.on('connection', function(socket) {
     connections++;
 
@@ -203,7 +196,12 @@ io.on('connection', function(socket) {
     });
 
     socket.on('track.rate', function(data) {
-        library.rateTrack(data.id, socket.uuid, data.rating);
+        library.rateTrack(data.id, socket.channel, socket.uuid, data.rating, function() {
+            // Update channels listeners
+            socket.broadcast.to('#' + socket.channel).emit('track.rated', data);
+            // Update trackWatcher
+            channels[socket.channel].updateRatings(data);
+        });
     });
 
     socket.on('track.search', function(data) {
