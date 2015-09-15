@@ -339,9 +339,9 @@ $(function() {
             e.preventDefault();
 
             var target = $(this).data('target-letter'),
-                top = $('.sidebar-tracklist .letter[data-letter='+target+']').offset().top;
+                top = $('.sidebar-tracklist .letter[data-letter='+target+']').offset().top + 1;
 
-            $('#sidebar').animate({ scrollTop: top }, 200);
+            $('.sidebar-content').animate({ scrollTop: top }, 200);
         });
 
         $('#sidebar').on('click', 'li a.queue-add[data-id]', function(e) {
@@ -350,7 +350,7 @@ $(function() {
             socket.emit('playlist.queue', { id: $(this).data('id') });
         });
 
-        $('#sidebar').on('click', ' .tracklist-search i', function(e) {
+        $('#sidebar').on('click', '.tracklist-search i', function(e) {
             e.preventDefault();
             $('#sidebar').toggleClass('show-search');
 
@@ -624,6 +624,9 @@ $(function() {
             track = tracks[trackID];
 
             var letter = track.artist.replace(/^the /i,"")[0].toUpperCase();
+            if (!/^[A-Z]$/.test(letter)) {
+                letter = '#';
+            }
 
             if (!(letter in tracklist)) {
                 tracklist[letter] = [];
