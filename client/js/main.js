@@ -200,7 +200,7 @@ $(function() {
 
     var tmplSearchResults = '<ul class="search-results">\
                                 {{#each .}}\
-                                    <li data-id="{{ id }}">\
+                                    <li data-id="{{ id }}" {{#if added}}class="added"{{/if}}>\
                                     <img src="{{ image }}">\
                                     <i class="fa fa-plus"></i>\
                                     <h3>{{ track }}</h3>\
