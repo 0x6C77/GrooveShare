@@ -244,7 +244,8 @@ $(function() {
                                         <strong>{{ track }}</strong> - {{ artist }}</li>\
                                 {{/each}}\
                              {{/each}}\
-                         </ul>';
+                         </ul>\
+                         <div class="back-to-top"><i class="fa fa-chevron-up"></i></div>';
     tmplTrackList = Handlebars.compile(tmplTrackList);
 
     var tmplTrackListItem = '<li>\
@@ -348,6 +349,19 @@ $(function() {
             e.preventDefault();
 
             socket.emit('playlist.queue', { id: $(this).data('id') });
+        });
+
+        $('#sidebar').on('click', '.back-to-top', function(e) {
+            e.preventDefault();
+            $('.sidebar-content').animate({ scrollTop: 0 }, 200);
+        });
+
+        $('#sidebar .sidebar-content').on('scroll', function() {
+            if ($(this).scrollTop()) {
+                $('#sidebar .back-to-top').fadeIn();
+            } else {
+                $('#sidebar .back-to-top').fadeOut();
+            }
         });
 
         $('#sidebar').on('click', '.tracklist-search i', function(e) {
