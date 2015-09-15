@@ -356,6 +356,21 @@ body.showing-playlist .lastfm-scrobble {
     color: white;
 }
 
+#sidebar ul.sidebar-tracklist-letters {
+    margin: 0;
+}
+
+#sidebar ul.sidebar-tracklist-letters li {
+    display: inline-block;
+    cursor: pointer;
+    width: 15px;
+    text-align: center;
+}
+
+#sidebar ul.sidebar-tracklist-letters li:hover {
+    font-weight: 500;
+}
+
 
 #player .channel-info {
     background: #151515;

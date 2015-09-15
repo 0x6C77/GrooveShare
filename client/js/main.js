@@ -225,9 +225,14 @@ $(function() {
                          </ul>\
                          {{/if}}\
                          <h1>Tracklist</h1>\
+                         <ul class="sidebar-tracklist-letters">\
+                            {{#each tracklist}}\
+                                <li data-target-letter="{{ @ key }}">{{ @ key }}</li>\
+                            {{/each}}\
+                         </ul>\
                          <ul class="sidebar-tracklist">\
                              {{#each tracklist}}\
-                                <li class="letter">{{ @key }}</li>\
+                                <li class="letter" data-letter="{{ @key }}">{{ @key }}</li>\
                                 {{#each .}}\
                                     <li>\
                                         <a href="https://www.youtube.co.uk/watch?v={{ youtube }}" class="play-youtube" target="_blank">\
@@ -328,6 +333,15 @@ $(function() {
                 $('body').removeClass('showing-sidebar');
                 $('#sidebar').removeClass('show-search');
             }
+        });
+
+        $('#sidebar').on('click', '.sidebar-tracklist-letters li', function(e) {
+            e.preventDefault();
+
+            var target = $(this).data('target-letter'),
+                top = $('.sidebar-tracklist .letter[data-letter='+target+']').offset().top;
+
+            $('#sidebar').animate({ scrollTop: top }, 200);
         });
 
         $('#sidebar').on('click', 'li a.queue-add[data-id]', function(e) {
