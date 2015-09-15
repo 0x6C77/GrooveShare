@@ -577,7 +577,6 @@ $(function() {
 
     // Listen for events
     socket.on('lastfm.authURL', function(url) {
-        console.log(url);
         window.open(url, '_blank');
     });
 

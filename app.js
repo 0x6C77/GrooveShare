@@ -196,11 +196,11 @@ io.on('connection', function(socket) {
     });
 
     socket.on('track.rate', function(data) {
-        library.rateTrack(data.id, socket.channel, socket.uuid, data.rating, function() {
+        library.rateTrack(data.id, socket.channel, socket.uuid, data.rating, function(data) {
             // Update channels listeners
-            socket.broadcast.to('#' + socket.channel).emit('track.rated', data);
+            io.sockets.to('#' + socket.channel).emit('track.rated', data);
             // Update trackWatcher
-            channels[socket.channel].updateRatings(data);
+            channels[socket.channel].trackWatcher.updateRatings(data);
         });
     });
 
