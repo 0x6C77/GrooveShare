@@ -408,7 +408,7 @@ $(function() {
         });
 
 
-        $('#controls .control').on('click', function(e) {
+        $('.track-controls .control').on('click', function(e) {
             if ($(this).hasClass('control-active')) {
                 return;
             }
@@ -420,9 +420,9 @@ $(function() {
 
             // Updated count - removed due to doubling
             // if (action == 'like') {
-            //     $('#controls .control--like .count').text(parseInt($('#controls .control--like .count').text()) + 1).show();
+            //     $('.track-controls .control--like .count').text(parseInt($('.track-controls .control--like .count').text()) + 1).show();
             // } else {
-            //     $('#controls .control--dislike .count').text(parseInt($('#controls .control--dislike .count').text()) + 1).show();
+            //     $('.track-controls .control--dislike .count').text(parseInt($('.track-controls .control--dislike .count').text()) + 1).show();
             // }
 
             // Did we rate oposite before
@@ -520,14 +520,14 @@ $(function() {
 
     socket.on('track.rated', function(data) {
         // Update UI
-        $('#controls .control--like .count').text(data.up).show();
+        $('.track-controls .control--like .count').text(data.up).show();
         if (data.up < 1) {
-            $('#controls .control--like .count').hide();
+            $('.track-controls .control--like .count').hide();
         }
 
-        $('#controls .control--dislike .count').text(data.down).show();
+        $('.track-controls .control--dislike .count').text(data.down).show();
         if (data.down < 1) {
-            $('#controls .control--dislike .count').hide();
+            $('.track-controls .control--dislike .count').hide();
         }
     });
 
@@ -714,30 +714,30 @@ $(function() {
 
 
             // Set ratings
-            $('#controls .control--like').removeClass('control-active').removeClass('control-deactive');
-            $('#controls .control--dislike').removeClass('control-active').removeClass('control-deactive');
+            $('.track-controls .control--like').removeClass('control-active').removeClass('control-deactive');
+            $('.track-controls .control--dislike').removeClass('control-active').removeClass('control-deactive');
             if (track.up) {
-                $('#controls .control--like .count').text(track.up).show();
+                $('.track-controls .control--like .count').text(track.up).show();
             } else {
-                $('#controls .control--like .count').text(0).hide();
+                $('.track-controls .control--like .count').text(0).hide();
             }
             if (track.up_uuid) {
                 var u = track.up_uuid.split(',');
                 if (u.indexOf(uuid) > -1) {
-                    $('#controls .control--like').addClass('control-active');
-                    $('#controls .control--dislike').addClass('control-deactive');
+                    $('.track-controls .control--like').addClass('control-active');
+                    $('.track-controls .control--dislike').addClass('control-deactive');
                 }
             }
             if (track.down) {
-                $('#controls .control--dislike .count').text(track.down).show();
+                $('.track-controls .control--dislike .count').text(track.down).show();
             } else {
-                $('#controls .control--dislike .count').text(0).hide();
+                $('.track-controls .control--dislike .count').text(0).hide();
             }
             if (track.down_uuid) {
                 var u = track.down_uuid.split(',');
                 if (u.indexOf(uuid) > -1) {
-                    $('#controls .control--dislike').addClass('control-active');
-                    $('#controls .control--like').addClass('control-deactive');
+                    $('.track-controls .control--dislike').addClass('control-active');
+                    $('.track-controls .control--like').addClass('control-deactive');
                 }
             }
 
