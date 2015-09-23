@@ -722,6 +722,12 @@ body.showing-playlist .lastfm-scrobble {
     right: 0;
     padding: 8px 15px;
     background: #151515;
+    max-width: 250px;
+    text-decoration: none;
+}
+
+.concert:hover {
+    background: #222222;
 }
 
 .concert strong {

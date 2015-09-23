@@ -142,8 +142,8 @@ $(function() {
 
 
 
-    var tmplConcert = '<a href="{{ uri }}" target="_blank" class="concert">\
-                            <strong>{{ title }}</strong>\
+    var tmplConcert = '<a href="{{ concert.uri }}" target="_blank" class="concert">\
+                            <strong>{{ concert.title }}</strong>\
                        </a>';
     tmplConcert = Handlebars.compile(tmplConcert);
 
