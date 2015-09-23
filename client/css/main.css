@@ -58,8 +58,6 @@ input::-webkit-input-placeholder {
 
 
 
-
-
 /*****************************************************************************
  *   
  *   HOMEPAGE
@@ -718,12 +716,30 @@ body.showing-playlist .lastfm-scrobble {
 }
 
 
+.concert {
+    position: absolute;
+    bottom: 20px;
+    right: 0;
+    padding: 8px 15px;
+    background: #151515;
+}
+
+.concert strong {
+    color: #286aab;
+}
+
+
+
 @media screen and (max-width: 500px) {
     #search {
         width: auto;
         left: 10px;
         bottom: 10px;
        top: auto;
+    }
+
+    .concert {
+        display: none !important;
     }
 }
 

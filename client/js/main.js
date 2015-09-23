@@ -64,6 +64,10 @@ $(function() {
         setupPlayer(data);
     });
 
+    socket.on('artist.concert', function(data) {
+        showConcert(data);
+    });
+
 
     /*****************************************************************************
      *   
@@ -134,6 +138,23 @@ $(function() {
                 $('.channels').addClass('active');
             }, 250);
         }
+    }
+
+
+
+    var tmplConcert = '<a href="{{ uri }}" target="_blank" class="concert">\
+                            <strong>{{ title }}</strong>
+                       </a>';
+    tmplConcert = Handlebars.compile(tmplConcert);
+
+    function showConcert(data) {
+        var $concert = tmplConcert(data).hide();
+        $('body').append($concert);
+        $concert.fadeIn();
+    }
+
+    function hideConcert() {
+        $('.concert').fadeOut(function() { $(this).remove(); });
     }
 
 
