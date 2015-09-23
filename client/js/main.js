@@ -148,10 +148,9 @@ $(function() {
     tmplConcert = Handlebars.compile(tmplConcert);
 
     function showConcert(data) {
+        console.log(data);
         var $concert = tmplConcert(data);
-        $concert.hide();
         $('body').append($concert);
-        $concert.fadeIn();
     }
 
     function hideConcert() {
