@@ -536,6 +536,9 @@ $(function() {
     socket.on('playlist.play', function(data) {
         player.play(data.track, data.position);
 
+        // Hide concerts
+        hideConcert();
+
         if (data.queue) {
             queue = data.queue;
         } else {
