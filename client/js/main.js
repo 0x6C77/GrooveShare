@@ -148,7 +148,6 @@ $(function() {
     tmplConcert = Handlebars.compile(tmplConcert);
 
     function showConcert(data) {
-        console.log(data);
         var $concert = tmplConcert(data);
         $('body').append($concert);
     }
@@ -255,7 +254,7 @@ $(function() {
                              {{#each tracklist}}\
                                 <li class="letter" data-letter="{{ @key }}">{{ @key }}</li>\
                                 {{#each .}}\
-                                    <li>\
+                                    <li data-added="{{ added }}">\
                                         <a href="https://www.youtube.co.uk/watch?v={{ youtube }}" class="play-youtube" target="_blank">\
                                             <i class="fa fa-youtube-play"></i>\
                                         </a>\
