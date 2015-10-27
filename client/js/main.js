@@ -62,6 +62,9 @@ $(function() {
     socket.on('channel.joined', function(data) {
         localStorage.setItem('channel', data.channel.channel_id);
         setupPlayer(data);
+
+        // Get tracklist
+        socket.emit('tracklist.list');
     });
 
     socket.on('artist.concert', function(data) {
@@ -345,11 +348,7 @@ $(function() {
 
         $('.show-sidebar').on('click', function(e) {
             if (!$('body').hasClass('showing-sidebar')) {
-                if (systemTrackList && tracklist.length) {
-                    renderTracklist(tracklist);
-                } else {
-                    socket.emit('tracklist.list');
-                }
+                renderTracklist(tracklist);
             } else {
                 $('body').removeClass('showing-sidebar');
                 $('#sidebar').removeClass('show-search');
@@ -585,7 +584,7 @@ $(function() {
     var systemTrackList = false;
     socket.on('tracklist.list', function(data) {
         tracklist = data;
-        renderTracklist(data);
+        //renderTracklist(data);
         systemTrackList = true; // Don't ask again
     });
 
