@@ -257,7 +257,7 @@ $(function() {
                              {{#each tracklist}}\
                                 <li class="letter" data-letter="{{ @key }}">{{ @key }}</li>\
                                 {{#each .}}\
-                                    <li data-added="{{ added }}">\
+                                    <li data-added="{{ added }}" data-likes="{{ likes }}" data-dislikes="{{ dislikes }}">\
                                         <a href="https://www.youtube.co.uk/watch?v={{ youtube }}" class="play-youtube" target="_blank">\
                                             <i class="fa fa-youtube-play"></i>\
                                         </a>\
