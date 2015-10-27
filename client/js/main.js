@@ -238,7 +238,7 @@ $(function() {
                          <h1>Queue</h1>\
                          <ul class="sidebar-queue">\
                              {{#each queue}}\
-                                <li>\
+                                <li {{#if auto}}class="autoqueued"{{/if}}>\
                                     <a href="https://www.youtube.co.uk/watch?v={{ youtube }}" class="play-youtube" target="_blank">\
                                         <i class="fa fa-youtube-play"></i>\
                                     </a>\
