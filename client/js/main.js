@@ -271,7 +271,7 @@ $(function() {
                          <div class="back-to-top"><i class="fa fa-chevron-up"></i></div>';
     tmplTrackList = Handlebars.compile(tmplTrackList);
 
-    var tmplTrackListItem = '<li>\
+    var tmplTrackListItem = '<li {{#if auto}}class="autoqueued"{{/if}}>\
                                 <a href="https://www.youtube.co.uk/watch?v={{ youtube }}" class="play-youtube" target="_blank">\
                                     <i class="fa fa-youtube-play"></i>\
                                 </a>\
@@ -566,6 +566,17 @@ $(function() {
 
     socket.on('playlist.preload', function(data) {
         player.preloadNext(data);
+
+        // toastr["info"](data.track + ' - ' + data.artist, 'Queued');
+        data.auto = true;
+        queue.push(data);
+        if ($('body').hasClass('showing-sidebar')) {
+            if ($('#sidebar .sidebar-queue').length) {
+                $('#sidebar .sidebar-queue').append(tmplTrackListItem(data));
+            } else {
+                renderTracklist(tracklist);
+            }
+        }
     });
 
     socket.on('track.rated', function(data) {

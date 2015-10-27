@@ -303,6 +303,10 @@ body.showing-playlist .lastfm-scrobble {
     font-size: 0.9em;
 }
 
+#sidebar ul li.autoqueue {
+    color: #999999;
+}
+
 #sidebar ul li.artist-list {
     padding: 6px 0;
     font-weight: 500;
